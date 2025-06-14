@@ -1,0 +1,22 @@
+{
+  "name": "csgo-blue-gem-calculator",
+  "version": "0.0.1",
+  "author": "chescos",
+  "license": "MIT",
+  "description": "Calculate the Blue percentage of a CS2 skin using its paint seed.",
+  "keywords": [
+    "cs2",
+    "blue gem"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chescos/csgo-blue-gem-calculator.git"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
