@@ -1,20 +1,25 @@
 name: Test
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
+
 jobs:
-  Run-Tests:
-    runs-on: ubuntu-latest
+  ts-test:
+    runs-on: ubuntu-22.04
+
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
+      - name: Download repository
+        uses: actions/checkout@v4
+      - name: Set up Node with cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
       - name: Install dependencies
-        run: |
-          npm install
-      - name: Run tests
-        run: |
-          npm run test
+        run: npm install
+      - name: Test code via Vitest
+        run: npm run test
