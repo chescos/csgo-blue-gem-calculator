@@ -1,20 +1,25 @@
 name: Build
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
+
 jobs:
-  Create-Build:
-    runs-on: ubuntu-latest
+  npm-build:
+    runs-on: ubuntu-22.04
+
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
+      - name: Download repository
+        uses: actions/checkout@v4
+      - name: Set up Node with cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
       - name: Create build
-        run: |
-          npm run build
+        run: npm run build
