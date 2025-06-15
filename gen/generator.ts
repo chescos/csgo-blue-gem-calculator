@@ -5,8 +5,6 @@ import sharp from "sharp";
 import srgbtransform from "./utils/srgb-transform";
 
 class BlueGemGenerator {
-
-  // input: r,g,b in [0,1], out: h in [0,360) and s,v in [0,1]
   static rgb2hsv(r: number, g: number, b: number): [number, number, number] {
     let v=Math.max(r,g,b), c=v-Math.min(r,g,b);
     let h= c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c));
@@ -14,7 +12,7 @@ class BlueGemGenerator {
   }
 
   static IsHeatTreatedBlueHsv(hue: number, saturation: number, brightness: number): boolean {
-      if (hue < 0.55 || hue >= 0.7) return false;
+      if (hue < 200 || hue >= 250) return false;
       if (saturation < 0.3 || saturation >= 1.0) return false;
       if (brightness < 0.1 || brightness >= 1.0) return false;
 
@@ -22,7 +20,7 @@ class BlueGemGenerator {
   }
 
   static IsHeatTreatedPurpleHsv(hue: number, saturation: number, brightness: number): boolean {
-    if ((hue < 0.7 || hue >= 0.9)) return false;
+    if ((hue < 250 || hue >= 320)) return false;
     if (saturation < 0.2 || saturation >= 1.0) return false;
     if (brightness < 0.05 || brightness >= 1.0) return false;
 
@@ -63,8 +61,7 @@ class BlueGemGenerator {
         b /= 255;
       }
 
-      let [h, s, v] = BlueGemGenerator.rgb2hsv(r, g, b);
-      h /= 360; // Normalize hue to [0, 1]
+      const [h, s, v] = BlueGemGenerator.rgb2hsv(r, g, b);
 
       const isBlue = BlueGemGenerator.IsHeatTreatedBlueHsv(h, s, v);
       const isPurple = BlueGemGenerator.IsHeatTreatedPurpleHsv(h, s, v);
