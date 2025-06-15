@@ -7,7 +7,7 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['dist/'],
+    ignores: ['dist/', 'pages/'],
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
