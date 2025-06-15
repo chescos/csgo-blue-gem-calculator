@@ -21,8 +21,9 @@
     "blue gem"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --config vite.config.pages.js",
+    "pages": "vite --config vite.config.pages.js build",
+    "build": "vite --config vite.config.lib.js build",
     "ts": "tsc --noEmit",
     "lint": "eslint . --fix",
     "prettify": "prettier --write . && git diff --exit-code",
