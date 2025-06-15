@@ -1,7 +1,5 @@
 class BlueGemGenerator {
-  run(): void {
-
-  }
+  run(): void {}
 }
 
 const generator = new BlueGemGenerator();
