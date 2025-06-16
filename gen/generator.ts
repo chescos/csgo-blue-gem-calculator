@@ -1,40 +1,9 @@
 import fs from 'fs';
 import sharp from 'sharp';
-import srgbtransform from './utils/srgb-transform';
+import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
+import { ColorType } from './algorithm/color-type';
 
 class BlueGemGenerator {
-  static rgb2hsv(r: number, g: number, b: number): [number, number, number] {
-    const v = Math.max(r, g, b),
-      c = v - Math.min(r, g, b);
-    const h =
-      c && (v == r ? (g - b) / c : v == g ? 2 + (b - r) / c : 4 + (r - g) / c);
-    return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
-  }
-
-  static IsHeatTreatedBlueHsv(
-    hue: number,
-    saturation: number,
-    brightness: number,
-  ): boolean {
-    if (hue < 200 || hue >= 250) return false;
-    if (saturation < 0.3 || saturation >= 1.0) return false;
-    if (brightness < 0.1 || brightness >= 1.0) return false;
-
-    return true;
-  }
-
-  static IsHeatTreatedPurpleHsv(
-    hue: number,
-    saturation: number,
-    brightness: number,
-  ): boolean {
-    if (hue < 250 || hue >= 320) return false;
-    if (saturation < 0.2 || saturation >= 1.0) return false;
-    if (brightness < 0.05 || brightness >= 1.0) return false;
-
-    return true;
-  }
-
   async analyzeImage(imagePath: string): Promise<void> {
     const startTime = Date.now();
 
@@ -45,8 +14,7 @@ class BlueGemGenerator {
     let blueCount = 0;
     let totalCount = 0;
 
-    const WarnForDoubleClassification = false;
-    const UseLinearColors = true;
+    const classifier = new HeatTreatedClassifier();
 
     for (let i = 0; i < data.length; i += 4) {
       const a = data[i + 3];
@@ -55,49 +23,24 @@ class BlueGemGenerator {
       }
 
       totalCount++;
-      let [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
 
-      if (UseLinearColors) {
-        [r, g, b] = [
-          srgbtransform.srgb8BitToLinear(r),
-          srgbtransform.srgb8BitToLinear(g),
-          srgbtransform.srgb8BitToLinear(b),
-        ];
-      } else {
-        r /= 255;
-        g /= 255;
-        b /= 255;
-      }
+      const colorType = classifier.getColorType(r, g, b);
 
-      const [h, s, v] = BlueGemGenerator.rgb2hsv(r, g, b);
-
-      const isBlue = BlueGemGenerator.IsHeatTreatedBlueHsv(h, s, v);
-      const isPurple = BlueGemGenerator.IsHeatTreatedPurpleHsv(h, s, v);
-
-      const isGold = !isBlue && !isPurple; // todo: gold classification
-
-      if (WarnForDoubleClassification) {
-        if (isBlue && isPurple) {
-          console.warn(
-            `Double classification detected at pixel ${i / 4}: Blue and Purple`,
-          );
-        }
-      }
-
-      if (isBlue) {
+      if (colorType === ColorType.Blue) {
         blueCount++;
         data[i] = 0;
         data[i + 1] = 0;
         data[i + 2] = 255;
-      } else if (isPurple) {
+      } else if (colorType === ColorType.Purple) {
         data[i] = 255;
         data[i + 1] = 0;
         data[i + 2] = 255;
-      } else if (isGold) {
+      } else if (colorType === ColorType.Gold) {
         data[i] = 255;
         data[i + 1] = 215;
         data[i + 2] = 0;
-      } else {
+      } else if (colorType === ColorType.GrayOrUndetermined) {
         data[i] = 0;
         data[i + 1] = 0;
         data[i + 2] = 0;
