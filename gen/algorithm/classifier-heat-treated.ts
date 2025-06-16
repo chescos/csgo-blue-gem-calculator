@@ -14,11 +14,7 @@ export class HeatTreatedClassifier extends BaseClassifier {
     return true;
   }
 
-  static isPurple(
-    hue: number,
-    saturation: number,
-    brightness: number,
-  ): boolean {
+  static isPurple(hue: number, saturation: number, brightness: number): boolean {
     if (hue < PurpleStart || hue >= PurpleEnd) return false;
     if (saturation < 0.2 || saturation >= 1.0) return false;
     if (brightness < 0.05 || brightness >= 1.0) return false;
@@ -34,11 +30,7 @@ export class HeatTreatedClassifier extends BaseClassifier {
     return true;
   }
 
-  override getColorTypeFromHsv(
-    hue: number,
-    saturation: number,
-    brightness: number,
-  ): ColorType {
+  override getColorTypeFromHsv(hue: number, saturation: number, brightness: number): ColorType {
     if (HeatTreatedClassifier.isBlue(hue, saturation, brightness)) {
       return ColorType.Blue;
     } else if (HeatTreatedClassifier.isPurple(hue, saturation, brightness)) {

@@ -1,4 +1,3 @@
-
 type ItemType = 'ch' | 'ht';
 type ImageType = 'default' | 'frontview' | 'playside' | 'backside';
 

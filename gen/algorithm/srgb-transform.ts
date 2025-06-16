@@ -22,8 +22,7 @@
  */
 
 class SRGBTransform {
-  private static readonly SRGB_8BIT_TO_LINEAR: number[] =
-    SRGBTransform.initTable();
+  private static readonly SRGB_8BIT_TO_LINEAR: number[] = SRGBTransform.initTable();
 
   private static initTable(): number[] {
     const table: number[] = [];
@@ -41,8 +40,7 @@ class SRGBTransform {
   }
 
   static srgb8BitToLinear(x: number): number {
-    if ((x | 0) != x || x >>> 8 != 0)
-      throw new RangeError('Value out of 8-bit range');
+    if ((x | 0) != x || x >>> 8 != 0) throw new RangeError('Value out of 8-bit range');
     return SRGBTransform.SRGB_8BIT_TO_LINEAR[x]!;
   }
 

@@ -7,9 +7,7 @@ class BlueGemGenerator {
   async analyzeImage(imagePath: string): Promise<void> {
     const startTime = Date.now();
 
-    const { info, data } = await sharp(fs.realpathSync(imagePath))
-      .raw()
-      .toBuffer({ resolveWithObject: true });
+    const { info, data } = await sharp(fs.realpathSync(imagePath)).raw().toBuffer({ resolveWithObject: true });
 
     let blueCount = 0;
     let totalCount = 0;
@@ -48,13 +46,10 @@ class BlueGemGenerator {
     }
 
     // get percentage, rounded to 2 decimal places
-    const bluePercentage =
-      Math.round((blueCount / totalCount) * 100 * 100) / 100;
+    const bluePercentage = Math.round((blueCount / totalCount) * 100 * 100) / 100;
     const finishedSeconds = (Date.now() - startTime) / 1000;
 
-    console.log(
-      `Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`,
-    );
+    console.log(`Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`);
 
     // write masked image for visualization
     await sharp(Buffer.from(data), {
