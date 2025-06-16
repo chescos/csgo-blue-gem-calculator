@@ -32,9 +32,8 @@ export class BlueGemGenerator {
       item.types.forEach((type): void => {
         item.images.forEach((image): void => {
           for (let seed = 0; seed <= 1000; seed++) {
-            const fileName = image === 'default'
-                ? `${item.slug}_${type}_${seed}.png`
-                : `${item.slug}_${type}_${image}_${seed}.png`;
+            const fileName =
+              image === 'default' ? `${item.slug}_${type}_${seed}.png` : `${item.slug}_${type}_${image}_${seed}.png`;
 
             if (!fileSet.has(fileName)) {
               urls.push(`${baseUrl}${fileName}`);

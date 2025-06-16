@@ -42,7 +42,7 @@ class Downloader {
 
       const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
       const buffer: Buffer<ArrayBuffer> = Buffer.from(arrayBuffer);
-      const fileName: string = path.basename((new URL(url)).pathname);
+      const fileName: string = path.basename(new URL(url).pathname);
       await writeFile(path.join(this.folder, '/', fileName), buffer);
 
       this.updateStatus();
