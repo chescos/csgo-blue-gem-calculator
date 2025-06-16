@@ -22,60 +22,41 @@
  */
 
 namespace srgbtransform {
+  export function srgbToLinear(x: number): number {
+    if (x <= 0) return 0;
+    else if (x >= 1) return 1;
+    else if (x < 0.04045) return x / 12.92;
+    else return Math.pow((x + 0.055) / 1.055, 2.4);
+  }
 
-	export function srgbToLinear(x: number): number {
-		if (x <= 0)
-			return 0;
-		else if (x >= 1)
-			return 1;
-		else if (x < 0.04045)
-			return x / 12.92;
-		else
-			return Math.pow((x + 0.055) / 1.055, 2.4);
-	}
+  export function srgb8BitToLinear(x: number): number {
+    if ((x | 0) != x || x >>> 8 != 0)
+      throw new RangeError('Value out of 8-bit range');
+    return SRGB_8BIT_TO_LINEAR[x];
+  }
 
+  export function linearToSrgb(x: number): number {
+    if (x <= 0) return 0;
+    else if (x >= 1) return 1;
+    else if (x < 0.0031308) return x * 12.92;
+    else return Math.pow(x, 1 / 2.4) * 1.055 - 0.055;
+  }
 
-	export function srgb8BitToLinear(x: number): number {
-		if ((x | 0) != x || (x >>> 8) != 0)
-			throw new RangeError("Value out of 8-bit range");
-		return SRGB_8BIT_TO_LINEAR[x];
-	}
+  export function linearToSrgb8Bit(x: number): number {
+    if (x <= 0) return 0;
+    const TABLE: Array<number> = SRGB_8BIT_TO_LINEAR;
+    if (x >= 1) return TABLE.length - 1;
+    let y: number = 0;
+    for (let i = TABLE.length >>> 1; i != 0; i >>>= 1) {
+      if (TABLE[y | i] <= x) y |= i;
+    }
+    if (x - TABLE[y] <= TABLE[y + 1] - x) return y;
+    else return y + 1;
+  }
 
-
-	export function linearToSrgb(x: number): number {
-		if (x <= 0)
-			return 0;
-		else if (x >= 1)
-			return 1;
-		else if (x < 0.0031308)
-			return x * 12.92;
-		else
-			return Math.pow(x, 1 / 2.4) * 1.055 - 0.055;
-	}
-
-
-	export function linearToSrgb8Bit(x: number): number {
-		if (x <= 0)
-			return 0;
-		const TABLE: Array<number> = SRGB_8BIT_TO_LINEAR;
-		if (x >= 1)
-			return TABLE.length - 1;
-		let y: number = 0;
-		for (let i = TABLE.length >>> 1; i != 0; i >>>= 1) {
-			if (TABLE[y | i] <= x)
-				y |= i;
-		}
-		if (x - TABLE[y] <= TABLE[y + 1] - x)
-			return y;
-		else
-			return y + 1;
-	}
-
-
-	let SRGB_8BIT_TO_LINEAR: Array<number> = [];
-	for (let i = 0; i < 256; i++)
-		SRGB_8BIT_TO_LINEAR.push(srgbToLinear(i / 255.0));
-
+  let SRGB_8BIT_TO_LINEAR: Array<number> = [];
+  for (let i = 0; i < 256; i++)
+    SRGB_8BIT_TO_LINEAR.push(srgbToLinear(i / 255.0));
 }
 
 export default srgbtransform;

@@ -1,26 +1,36 @@
 // @ts-nocheck
 
-import fs from "fs";
-import sharp from "sharp";
-import srgbtransform from "./utils/srgb-transform";
+import fs from 'fs';
+import sharp from 'sharp';
+import srgbtransform from './utils/srgb-transform';
 
 class BlueGemGenerator {
   static rgb2hsv(r: number, g: number, b: number): [number, number, number] {
-    let v=Math.max(r,g,b), c=v-Math.min(r,g,b);
-    let h= c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c));
-    return [60*(h<0?h+6:h), v&&c/v, v];
+    let v = Math.max(r, g, b),
+      c = v - Math.min(r, g, b);
+    let h =
+      c && (v == r ? (g - b) / c : v == g ? 2 + (b - r) / c : 4 + (r - g) / c);
+    return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
   }
 
-  static IsHeatTreatedBlueHsv(hue: number, saturation: number, brightness: number): boolean {
-      if (hue < 200 || hue >= 250) return false;
-      if (saturation < 0.3 || saturation >= 1.0) return false;
-      if (brightness < 0.1 || brightness >= 1.0) return false;
+  static IsHeatTreatedBlueHsv(
+    hue: number,
+    saturation: number,
+    brightness: number,
+  ): boolean {
+    if (hue < 200 || hue >= 250) return false;
+    if (saturation < 0.3 || saturation >= 1.0) return false;
+    if (brightness < 0.1 || brightness >= 1.0) return false;
 
-      return true;
+    return true;
   }
 
-  static IsHeatTreatedPurpleHsv(hue: number, saturation: number, brightness: number): boolean {
-    if ((hue < 250 || hue >= 320)) return false;
+  static IsHeatTreatedPurpleHsv(
+    hue: number,
+    saturation: number,
+    brightness: number,
+  ): boolean {
+    if (hue < 250 || hue >= 320) return false;
     if (saturation < 0.2 || saturation >= 1.0) return false;
     if (brightness < 0.05 || brightness >= 1.0) return false;
 
@@ -37,7 +47,7 @@ class BlueGemGenerator {
     let blueCount = 0;
     let totalCount = 0;
 
-    const WarnForDoubleClassification = false
+    const WarnForDoubleClassification = false;
     const UseLinearColors = true;
 
     for (let i = 0; i < data.length; i += 4) {
@@ -70,7 +80,9 @@ class BlueGemGenerator {
 
       if (WarnForDoubleClassification) {
         if (isBlue && isPurple) {
-          console.warn(`Double classification detected at pixel ${i / 4}: Blue and Purple`);
+          console.warn(
+            `Double classification detected at pixel ${i / 4}: Blue and Purple`,
+          );
         }
       }
 
@@ -95,25 +107,26 @@ class BlueGemGenerator {
     }
 
     // get percentage, rounded to 2 decimal places
-    const bluePercentage = Math.round(((blueCount / totalCount) * 100) * 100) / 100;
+    const bluePercentage =
+      Math.round((blueCount / totalCount) * 100 * 100) / 100;
     const finishedSeconds = (Date.now() - startTime) / 1000;
 
-    console.log(`Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`);
+    console.log(
+      `Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`,
+    );
 
     // write masked image for visualization
-    await sharp(
-      Buffer.from(data),
-      {
-        raw: {
-          width: info.width,
-          height: info.height,
-          channels: info.channels,
-        },
-      }).toFile("gen/last_image_masked.png");
+    await sharp(Buffer.from(data), {
+      raw: {
+        width: info.width,
+        height: info.height,
+        channels: info.channels,
+      },
+    }).toFile('gen/last_image_masked.png');
   }
 
   *getImageFiles(filter: string): Generator<string> {
-    for (const file of fs.readdirSync("images")) {
+    for (const file of fs.readdirSync('images')) {
       if (file.includes(filter)) {
         yield `./images/${file}`;
       }
@@ -121,9 +134,9 @@ class BlueGemGenerator {
   }
 
   run(): void {
-    const images = this.getImageFiles("deagle_ht");
+    const images = this.getImageFiles('deagle_ht');
     for (const image of images) {
-      if (image.includes("deagle_ht_490")) {
+      if (image.includes('deagle_ht_490')) {
         this.analyzeImage(image);
       }
     }
