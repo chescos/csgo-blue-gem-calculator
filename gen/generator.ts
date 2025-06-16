@@ -3,13 +3,13 @@ import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
 
-class BlueGemGenerator {
-  async analyzeImage(imagePath: string): Promise<void> {
+export class BlueGemGenerator {
+  public static async convertToMaskedImage(
+    imagePath: string,
+    outputPath: string | undefined = undefined,
+  ): Promise<void> {
     const startTime = Date.now();
-
-    const { info, data } = await sharp(fs.realpathSync(imagePath))
-      .raw()
-      .toBuffer({ resolveWithObject: true });
+    const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
     let blueCount = 0;
     let totalCount = 0;
@@ -48,22 +48,20 @@ class BlueGemGenerator {
     }
 
     // get percentage, rounded to 2 decimal places
-    const bluePercentage =
-      Math.round((blueCount / totalCount) * 100 * 100) / 100;
+    const bluePercentage = Math.round((blueCount / totalCount) * 100 * 100) / 100;
     const finishedSeconds = (Date.now() - startTime) / 1000;
 
-    console.log(
-      `Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`,
-    );
+    console.log(`Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`);
 
-    // write masked image for visualization
+    outputPath ??= imagePath.replace('.png', '.masked.png');
+
     await sharp(Buffer.from(data), {
       raw: {
         width: info.width,
         height: info.height,
         channels: info.channels,
       },
-    }).toFile('gen/last_image_masked.png');
+    }).toFile(outputPath);
   }
 
   *getImageFiles(filter: string): Generator<string> {
@@ -78,12 +76,14 @@ class BlueGemGenerator {
     const images = this.getImageFiles('deagle_ht');
     for (const image of images) {
       if (image.includes('deagle_ht_490')) {
-        this.analyzeImage(image);
+        BlueGemGenerator.convertToMaskedImage(image, 'gen/last_image_masked.png');
       }
     }
   }
 }
 
+/*
 const generator = new BlueGemGenerator();
 
 generator.run();
+*/
