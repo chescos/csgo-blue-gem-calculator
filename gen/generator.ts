@@ -23,7 +23,7 @@ class BlueGemGenerator {
       }
 
       totalCount++;
-      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+      const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
 
       const colorType = classifier.getColorType(r, g, b);
 
