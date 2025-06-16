@@ -3,4 +3,4 @@ export enum ColorType {
   Purple,
   Gold,
   GrayOrUndetermined,
-};
+}

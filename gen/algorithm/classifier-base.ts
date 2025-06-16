@@ -1,10 +1,18 @@
 import srgbtransform from './srgb-transform';
-import { ColorType } from './color-type'
+import { ColorType } from './color-type';
 
 export abstract class BaseClassifier {
-  abstract getColorTypeFromHsv(hue: number, saturation: number, brightness: number): ColorType;
+  abstract getColorTypeFromHsv(
+    hue: number,
+    saturation: number,
+    brightness: number,
+  ): ColorType;
 
-  public getColorType(rUint8: number, gUint8: number, bUint8: number): ColorType {
+  public getColorType(
+    rUint8: number,
+    gUint8: number,
+    bUint8: number,
+  ): ColorType {
     let [r, g, b] = [rUint8, gUint8, bUint8];
 
     // I think converting to linear before calculating hsv is more correct
