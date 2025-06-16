@@ -16,10 +16,13 @@ type BlueGemPercentages = {
 };
 
 export class BlueGemGenerator {
-  public static constructImageFileNameForTypeAndSeed(slug: string, type: PaintType, pose: string, seed: number): string {
-    return pose === 'default'
-      ? `${slug}_${type}_${seed}.png`
-      : `${slug}_${type}_${pose}_${seed}.png`;
+  public static constructImageFileNameForTypeAndSeed(
+    slug: string,
+    type: PaintType,
+    pose: string,
+    seed: number,
+  ): string {
+    return pose === 'default' ? `${slug}_${type}_${seed}.png` : `${slug}_${type}_${pose}_${seed}.png`;
   }
 
   async download(): Promise<void> {
@@ -89,14 +92,14 @@ export class BlueGemGenerator {
 
     const toPercentage = (value: number): number => {
       return Math.round((value / totalCount) * 100 * 100) / 100;
-    }
+    };
 
     return {
       blue: toPercentage(count[ColorType.Blue]!),
       purple: toPercentage(count[ColorType.Purple]!),
       gold: toPercentage(count[ColorType.Gold]!),
       other: toPercentage(count[ColorType.GrayOrUndetermined]!),
-    }
+    };
   }
 
   run(): void {
@@ -109,15 +112,19 @@ export class BlueGemGenerator {
       // todo: is this spawning too many promises?
       this.calculateBlueGemPercentagesForImage(imagePath)
         .then((percentages: BlueGemPercentages): void => {
-          console.log(`Seed: ${seed}, Blue: ${percentages.blue}%, Purple: ${percentages.purple}%, Gold: ${percentages.gold}%, Other: ${percentages.other}%`);
+          console.log(
+            `Seed: ${seed}, Blue: ${percentages.blue}%, Purple: ${percentages.purple}%, Gold: ${percentages.gold}%, Other: ${percentages.other}%`,
+          );
         })
         .catch((error: Error): void => {
           console.error(`Error processing image ${imageName}:`, error.message);
         });
     }
+
+    // todo: calculate all items, both poses
+    // todo: serialize data to json file, with compact but readable indentation
   }
 }
-
 
 const generator = new BlueGemGenerator();
 
