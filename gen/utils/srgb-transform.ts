@@ -54,7 +54,7 @@ namespace srgbtransform {
     else return y + 1;
   }
 
-  let SRGB_8BIT_TO_LINEAR: Array<number> = [];
+  const SRGB_8BIT_TO_LINEAR: Array<number> = [];
   for (let i = 0; i < 256; i++)
     SRGB_8BIT_TO_LINEAR.push(srgbToLinear(i / 255.0));
 }
