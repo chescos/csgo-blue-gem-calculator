@@ -43,7 +43,7 @@ class SRGBTransform {
   static srgb8BitToLinear(x: number): number {
     if ((x | 0) != x || x >>> 8 != 0)
       throw new RangeError('Value out of 8-bit range');
-    return SRGBTransform.SRGB_8BIT_TO_LINEAR[x];
+    return SRGBTransform.SRGB_8BIT_TO_LINEAR[x]!;
   }
 
   static linearToSrgb(x: number): number {
@@ -59,9 +59,9 @@ class SRGBTransform {
     if (x >= 1) return TABLE.length - 1;
     let y: number = 0;
     for (let i = TABLE.length >>> 1; i != 0; i >>>= 1) {
-      if (TABLE[y | i] <= x) y |= i;
+      if (TABLE[y | i]! <= x) y |= i;
     }
-    if (x - TABLE[y] <= TABLE[y + 1] - x) return y;
+    if (x - TABLE[y]! <= TABLE[y + 1]! - x) return y;
     else return y + 1;
   }
 }
