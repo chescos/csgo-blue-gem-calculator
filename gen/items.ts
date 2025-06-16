@@ -1,11 +1,11 @@
-type ItemType = 'ch' | 'ht';
-type ImageType = 'default' | 'frontview' | 'playside' | 'backside';
+export type PaintType = 'ch' | 'ht';
+type Pose = 'default' | 'frontview' | 'playside' | 'backside';
 
 interface Item {
   name: string;
   slug: string;
-  types: ItemType[];
-  images: ImageType[];
+  types: PaintType[];
+  images: Pose[];
 }
 
 export const items: Record<string, Item> = {

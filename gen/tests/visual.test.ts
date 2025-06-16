@@ -1,5 +1,4 @@
 import { test, expect } from 'vitest';
-import { BlueGemGenerator } from '../generator';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from '../algorithm/classifier-heat-treated';
 import { ColorType } from '../algorithm/color-type';
