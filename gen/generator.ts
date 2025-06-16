@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import fs from 'fs';
 import sharp from 'sharp';
 import srgbtransform from './utils/srgb-transform';
