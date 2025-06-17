@@ -1,14 +1,40 @@
 export type PaintType = 'ch' | 'ht';
-type Pose = 'default' | 'frontview' | 'playside' | 'backside';
+export type ImagePose = 'default' | 'frontview' | 'playside' | 'backside';
 
-interface Item {
+export type Item = {
   name: string;
   slug: string;
   types: PaintType[];
-  images: Pose[];
-}
+  images: ImagePose[];
+};
 
-export const items: Record<string, Item> = {
+export type ItemKey =
+  | 'ak47'
+  | 'bayonet'
+  | 'bowie'
+  | 'butterfly'
+  | 'classic'
+  | 'deagle'
+  | 'falchion'
+  | 'fiveSeven'
+  | 'flip'
+  | 'gut'
+  | 'huntsman'
+  | 'karambit'
+  | 'kukri'
+  | 'm9'
+  | 'mac10'
+  | 'navaja'
+  | 'nomad'
+  | 'paracord'
+  | 'shadow'
+  | 'skeleton'
+  | 'stiletto'
+  | 'survival'
+  | 'talon'
+  | 'ursus';
+
+export const items: Record<ItemKey, Item> = {
   ak47: {
     name: 'AK-47',
     slug: 'ak47',

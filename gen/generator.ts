@@ -2,7 +2,7 @@ import { readdir } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
-import { items, PaintType } from './items';
+import { items, PaintType, ImagePose, ItemKey } from './items';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Downloader from './downloader';
@@ -15,7 +15,21 @@ type BlueGemPercentages = {
   other: number;
 };
 
+type QueueItem = {
+  itemKey: ItemKey,
+  paintType: PaintType,
+  imagePose: ImagePose,
+  seed: number,
+};
+
+type ResultItem = QueueItem & {
+  result: BlueGemPercentages,
+};
+
 export class BlueGemGenerator {
+  queue: QueueItem[] = [];
+  results: ResultItem[] = [];
+
   public static constructImageFileNameForTypeAndSeed(
     slug: string,
     type: PaintType,
@@ -23,6 +37,24 @@ export class BlueGemGenerator {
     seed: number,
   ): string {
     return pose === 'default' ? `${slug}_${type}_${seed}.png` : `${slug}_${type}_${pose}_${seed}.png`;
+  }
+
+  getAllImageFiles(): string[] {
+    const files: string[] = [];
+
+    Object.values(items).forEach((item): void => {
+      item.types.forEach((type): void => {
+        item.images.forEach((image): void => {
+          for (let seed = 0; seed <= 1000; seed++) {
+            const fileName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(item.slug, type, image, seed);
+
+            files.push(fileName);
+          }
+        });
+      });
+    });
+
+    return files;
   }
 
   async download(): Promise<void> {
@@ -43,23 +75,19 @@ export class BlueGemGenerator {
 
     const urls: string[] = [];
 
-    Object.values(items).forEach((item): void => {
-      item.types.forEach((type): void => {
-        item.images.forEach((image): void => {
-          for (let seed = 0; seed <= 1000; seed++) {
-            const fileName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(item.slug, type, image, seed);
+    const imageFiles = this.getAllImageFiles();
 
-            if (!fileSet.has(fileName)) {
-              urls.push(`${baseUrl}${fileName}`);
-            }
-          }
-        });
-      });
+    imageFiles.forEach((imageFile) => {
+      if (!fileSet.has(imageFile)) {
+        urls.push(`${baseUrl}${imageFile}`);
+      }
     });
 
-    const downloader = new Downloader(urls, folder, 100);
+    if (urls.length > 0) {
+      const downloader = new Downloader(urls, folder, 100);
 
-    await downloader.start();
+      await downloader.start();
+    }
   }
 
   async calculateBlueGemPercentagesForImage(imagePath: string): Promise<BlueGemPercentages> {
@@ -102,31 +130,72 @@ export class BlueGemGenerator {
     };
   }
 
-  run(): void {
-    const item = items['deagle']!;
+  async run(): Promise<void> {
+    console.log('Calculating images...');
 
-    for (let seed = 0; seed <= 1000; seed++) {
-      const imageName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(item.slug, 'ht', 'default', seed);
-      const imagePath = `./images/${imageName}`;
+    for (const itemKey of Object.keys(items) as ItemKey[]) {
+      const item = items[itemKey];
 
-      // todo: is this spawning too many promises?
-      this.calculateBlueGemPercentagesForImage(imagePath)
-        .then((percentages: BlueGemPercentages): void => {
-          console.log(
-            `Seed: ${seed}, Blue: ${percentages.blue}%, Purple: ${percentages.purple}%, Gold: ${percentages.gold}%, Other: ${percentages.other}%`,
-          );
-        })
-        .catch((error: Error): void => {
-          console.error(`Error processing image ${imageName}:`, error.message);
+      item.types.forEach((paintType): void => {
+        item.images.forEach((imagePose): void => {
+          for (let seed = 0; seed <= 1000; seed++) {
+            this.queue.push({
+              itemKey,
+              paintType,
+              imagePose,
+              seed,
+            });
+          }
         });
+      });
     }
 
-    // todo: calculate all items, both poses
-    // todo: serialize data to json file, with compact but readable indentation
+    const concurrency = 100;
+
+    const promises: Promise<void>[] = [];
+
+    for (let i = 0; i < concurrency; i++) {
+      promises.push(this.spawnWorker());
+    }
+
+    await Promise.all(promises);
+
+    console.log('\nAll images calculated');
+  }
+
+  async spawnWorker(): Promise<void> {
+    let queueItem: QueueItem | undefined;
+
+    while ((queueItem = this.queue.shift()) !== undefined) {
+      const imageName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(
+        items[queueItem.itemKey].slug,
+        queueItem.paintType,
+        queueItem.imagePose,
+        queueItem.seed,
+      );
+
+      const imagePath = `./images/${imageName}`;
+
+      const result = await this.calculateBlueGemPercentagesForImage(imagePath);
+
+      this.results.push({
+        ...queueItem,
+        result,
+      });
+
+      this.updateStatus();
+    }
+  }
+
+  updateStatus() {
+    const done = (this.results.length).toLocaleString('en-US');
+    const total = (this.queue.length + this.results.length).toLocaleString('en-US');
+
+    process.stdout.write(`\r${done}/${total} images calculated`);
   }
 }
 
 const generator = new BlueGemGenerator();
 
 await generator.download();
-generator.run();
+await generator.run();
