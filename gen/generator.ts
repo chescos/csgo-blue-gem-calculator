@@ -111,9 +111,7 @@ export class BlueGemGenerator {
     //const startTime = Date.now();
     const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
-    const classifier = paintType === 'ht'
-      ? new HeatTreatedClassifier()
-      : new CaseHardenedClassifier();
+    const classifier = paintType === 'ht' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
 
     const count = [0, 0, 0, 0];
     let totalCount = 0;
