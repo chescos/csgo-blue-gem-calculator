@@ -7,6 +7,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Downloader from './downloader';
 import path from 'path';
+import { CaseHardenedClassifier } from './algorithm/classifier-case-hardened';
 
 type BlueGemPercentages = {
   blue: number;
@@ -106,12 +107,13 @@ export class BlueGemGenerator {
     }
   }
 
-  async calculateBlueGemPercentagesForImage(imagePath: string): Promise<BlueGemPercentages> {
+  async calculateBlueGemPercentagesForImage(imagePath: string, paintType: PaintType): Promise<BlueGemPercentages> {
     //const startTime = Date.now();
     const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
-    // TODO: Implement and use other classifiers.
-    const classifier = new HeatTreatedClassifier();
+    const classifier = paintType === 'ht'
+      ? new HeatTreatedClassifier()
+      : new CaseHardenedClassifier();
 
     const count = [0, 0, 0, 0];
     let totalCount = 0;
@@ -193,7 +195,7 @@ export class BlueGemGenerator {
 
       const imagePath = `./images/${imageName}`;
 
-      const result = await this.calculateBlueGemPercentagesForImage(imagePath);
+      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.paintType);
 
       this.results.push({
         ...queueItem,
