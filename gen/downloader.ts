@@ -1,5 +1,6 @@
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import { exit } from 'process';
 
 class Downloader {
   total: number;
@@ -23,7 +24,18 @@ class Downloader {
       promises.push(this.spawnWorker());
     }
 
-    await Promise.all(promises);
+    let failedAny: boolean = false;
+    for (const promise of await Promise.allSettled(promises)) {
+      if (promise.status === 'rejected') {
+        console.error('Error downloading images:', promise.reason);
+        failedAny = true;
+      }
+    }
+
+    if (failedAny) {
+      console.error('Some images failed to download.');
+      exit(1);
+    }
 
     console.log('\nAll missing images downloaded');
   }
