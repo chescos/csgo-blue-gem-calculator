@@ -53,37 +53,33 @@ export default {
     syncScreenshotUrl() {
       const selectedSeed = this.data[this.activeItem][this.activePaint][this.activePose][this.activeIndex];
 
-      const fileName = this.activePose === 'default'
-        ? `${this.activeItem}_${this.activePaint}_${selectedSeed.seed}.png`
-        : `${this.activeItem}_${this.activePaint}_${this.activePose}_${selectedSeed.seed}.png`;
+      const fileName =
+        this.activePose === 'default'
+          ? `${this.activeItem}_${this.activePaint}_${selectedSeed.seed}.png`
+          : `${this.activeItem}_${this.activePaint}_${this.activePose}_${selectedSeed.seed}.png`;
 
       this.screenshotUrl = `https://cdn.csgoskins.gg/public/images/gems/v1/${fileName}`;
     },
 
     syncActivePaint() {
-      this.activePaint = this.data[this.activeItem].ch
-        ? 'ch'
-        : 'ht';
+      this.activePaint = this.data[this.activeItem].ch ? 'ch' : 'ht';
     },
 
     syncActivePose() {
-      this.activePose = this.data[this.activeItem][this.activePaint].default
-        ? 'default'
-        : 'playside';
+      this.activePose = this.data[this.activeItem][this.activePaint].default ? 'default' : 'playside';
     },
 
     syncActiveIndex() {
       this.activeIndex = 0;
     },
   },
-}
+};
 </script>
 
 <template>
   <div class="p-4 sm:p-12">
     <!-- Top Menu -->
     <div class="flex flex-wrap items-center justify-center">
-
       <!-- Item Select -->
       <div class="flex-none ml-0 sm:ml-12">
         <div class="relative">
@@ -97,12 +93,12 @@ export default {
             </option>
           </select>
           <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-            <path
-              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-            ></path>
-          </svg>
-        </span>
+            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+              <path
+                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+              ></path>
+            </svg>
+          </span>
         </div>
       </div>
 
@@ -119,12 +115,12 @@ export default {
             </option>
           </select>
           <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-            <path
-              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-            ></path>
-          </svg>
-        </span>
+            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+              <path
+                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+              ></path>
+            </svg>
+          </span>
         </div>
       </div>
 
@@ -138,13 +134,13 @@ export default {
           class="w-24 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Seed"
           aria-label="Seed"
-        >
+        />
       </div>
     </div>
 
     <!-- Image -->
     <div class="my-20">
-      <img class="block w-auto mx-auto" style="max-height: 50vh;" :src="screenshotUrl" alt="Screenshot">
+      <img class="block w-auto mx-auto" style="max-height: 50vh" :src="screenshotUrl" alt="Screenshot" />
     </div>
 
     <!-- Table -->
@@ -168,6 +164,5 @@ export default {
         </tr>
       </tbody>
     </table>
-
   </div>
 </template>

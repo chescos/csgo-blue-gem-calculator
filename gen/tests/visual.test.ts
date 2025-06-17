@@ -27,7 +27,7 @@ test('sample', async () => {
 async function convertToMaskedImage(
   classifier: BaseClassifier,
   imagePath: string,
-  outputPath: string | undefined = undefined
+  outputPath: string | undefined = undefined,
 ): Promise<void> {
   const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 

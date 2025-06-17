@@ -1,5 +1,4 @@
-import json from './../gen/result.json'
-
+import json from './../gen/result.json';
 
 class BlueGemCalculator {
   getData() {
