@@ -26,6 +26,20 @@ type ResultItem = QueueItem & {
   result: BlueGemPercentages,
 };
 
+type ResultFormat = {
+  [itemKey: string]: {
+    [paintType: string]: {
+      [imagePose: string]: {
+        seed: number;
+        blue: number;
+        purple: number;
+        gold: number;
+        other: number;
+      }[];
+    };
+  };
+};
+
 export class BlueGemGenerator {
   dirname: string;
   queue: QueueItem[] = [];
@@ -96,6 +110,7 @@ export class BlueGemGenerator {
     //const startTime = Date.now();
     const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
+    // TODO: Implement and use other classifiers.
     const classifier = new HeatTreatedClassifier();
 
     const count = [0, 0, 0, 0];
@@ -197,7 +212,39 @@ export class BlueGemGenerator {
   }
 
   async storeResult() {
-    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(this.results, null, 2));
+    // TODO: We either need to compress the data a lot for out NPM package, or fetch it from a URL,
+    //  so that the NPM package does not get too large.
+    const grouped = this.results.reduce((acc, item) => {
+      const { itemKey, paintType, imagePose, seed, result } = item;
+
+      if (!acc[itemKey]) acc[itemKey] = {};
+      if (!acc[itemKey][paintType]) acc[itemKey][paintType] = {};
+      if (!acc[itemKey][paintType][imagePose]) acc[itemKey][paintType][imagePose] = [];
+
+      acc[itemKey][paintType][imagePose].push({
+        seed,
+        ...result
+      });
+
+      return acc;
+    }, {} as ResultFormat);
+
+    const sortedResult: ResultFormat = {};
+
+    Object.keys(grouped).sort().forEach(itemKey => {
+      sortedResult[itemKey] = {};
+
+      Object.keys(grouped[itemKey]!).sort().forEach(paintType => {
+        sortedResult[itemKey]![paintType] = {};
+
+        Object.keys(grouped[itemKey]![paintType]!).sort().forEach(imagePose => {
+          sortedResult[itemKey]![paintType]![imagePose] = grouped[itemKey]![paintType]![imagePose]!
+            .sort((a, b) => b.blue - a.blue);
+        });
+      });
+    });
+
+    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(sortedResult, null, 2));
   }
 }
 
