@@ -181,6 +181,7 @@ export class BlueGemGenerator {
   }
 
   async spawnWorker(): Promise<void> {
+    // TODO: Use multiple cores, not just one
     let queueItem: QueueItem | undefined;
 
     while ((queueItem = this.queue.shift()) !== undefined) {
