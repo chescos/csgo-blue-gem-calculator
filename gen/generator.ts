@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises';
+import { readdir, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
@@ -27,13 +27,18 @@ type ResultItem = QueueItem & {
 };
 
 export class BlueGemGenerator {
+  dirname: string;
   queue: QueueItem[] = [];
   results: ResultItem[] = [];
+
+  constructor() {
+    this.dirname = dirname(fileURLToPath(import.meta.url));
+  }
 
   public static constructImageFileNameForTypeAndSeed(
     slug: string,
     type: PaintType,
-    pose: string,
+    pose: ImagePose,
     seed: number,
   ): string {
     return pose === 'default' ? `${slug}_${type}_${seed}.png` : `${slug}_${type}_${pose}_${seed}.png`;
@@ -58,10 +63,7 @@ export class BlueGemGenerator {
   }
 
   async download(): Promise<void> {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-
-    const folder = path.join(__dirname, '../images');
+    const folder = path.join(this.dirname, '../images');
 
     const files = await readdir(folder, { withFileTypes: true });
 
@@ -193,9 +195,14 @@ export class BlueGemGenerator {
 
     process.stdout.write(`\r${done}/${total} images calculated`);
   }
+
+  async storeResult() {
+    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(this.results, null, 2));
+  }
 }
 
 const generator = new BlueGemGenerator();
 
 await generator.download();
 await generator.run();
+await generator.storeResult();
