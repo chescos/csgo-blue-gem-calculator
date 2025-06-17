@@ -2,12 +2,21 @@ import { test, expect } from 'vitest';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from '../algorithm/classifier-heat-treated';
 import { ColorType } from '../algorithm/color-type';
+import { CaseHardenedClassifier } from '../algorithm/classifier-case-hardened';
+import { BaseClassifier } from '../algorithm/classifier-base';
 
 test('sample', async () => {
+  const ht = new HeatTreatedClassifier();
+  const ch = new CaseHardenedClassifier();
+
   await Promise.all([
-    convertToMaskedImage('gen/tests/images/heat_treated_blue_deagle_490.png'),
-    convertToMaskedImage('gen/tests/images/heat_treated_purple_deagle_172.png'),
-    convertToMaskedImage('gen/tests/images/heat_treated_gold_deagle_182.png'),
+    convertToMaskedImage(ht, 'gen/tests/images/heat_treated_blue_deagle_490.png'),
+    convertToMaskedImage(ht, 'gen/tests/images/heat_treated_purple_deagle_172.png'),
+    convertToMaskedImage(ht, 'gen/tests/images/heat_treated_gold_deagle_182.png'),
+    convertToMaskedImage(ch, 'gen/tests/images/case_hardened_blue_bayonet_555.png'),
+    convertToMaskedImage(ch, 'gen/tests/images/case_hardened_gold_bayonet_395.png'),
+    convertToMaskedImage(ch, 'gen/tests/images/case_hardened_blue_ak47_661.png'),
+    convertToMaskedImage(ch, 'gen/tests/images/case_hardened_purple_ak47_571.png'),
   ]);
 
   expect(true).toBe(true);
@@ -15,14 +24,12 @@ test('sample', async () => {
   // todo: use git diff to ensure the image is correct`
 });
 
-async function convertToMaskedImage(imagePath: string, outputPath: string | undefined = undefined): Promise<void> {
-  const startTime = Date.now();
+async function convertToMaskedImage(
+  classifier: BaseClassifier,
+  imagePath: string,
+  outputPath: string | undefined = undefined
+): Promise<void> {
   const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
-
-  let blueCount = 0;
-  let totalCount = 0;
-
-  const classifier = new HeatTreatedClassifier();
 
   for (let i = 0; i < data.length; i += 4) {
     const a = data[i + 3];
@@ -30,13 +37,11 @@ async function convertToMaskedImage(imagePath: string, outputPath: string | unde
       continue;
     }
 
-    totalCount++;
     const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
 
     const colorType = classifier.getColorType(r, g, b);
 
     if (colorType === ColorType.Blue) {
-      blueCount++;
       data[i] = 0;
       data[i + 1] = 0;
       data[i + 2] = 255;
@@ -54,12 +59,6 @@ async function convertToMaskedImage(imagePath: string, outputPath: string | unde
       data[i + 2] = 0;
     }
   }
-
-  // get percentage, rounded to 2 decimal places
-  const bluePercentage = Math.round((blueCount / totalCount) * 100 * 100) / 100;
-  const finishedSeconds = (Date.now() - startTime) / 1000;
-
-  console.log(`Image: ${imagePath}, Blue percentage: ${bluePercentage}%, Finished in ${finishedSeconds}s`);
 
   outputPath ??= imagePath.replace('.png', '.masked.png');
 
