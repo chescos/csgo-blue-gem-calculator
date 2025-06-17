@@ -16,14 +16,14 @@ type BlueGemPercentages = {
 };
 
 type QueueItem = {
-  itemKey: ItemKey,
-  paintType: PaintType,
-  imagePose: ImagePose,
-  seed: number,
+  itemKey: ItemKey;
+  paintType: PaintType;
+  imagePose: ImagePose;
+  seed: number;
 };
 
 type ResultItem = QueueItem & {
-  result: BlueGemPercentages,
+  result: BlueGemPercentages;
 };
 
 type ResultFormat = {
@@ -205,7 +205,7 @@ export class BlueGemGenerator {
   }
 
   updateStatus() {
-    const done = (this.results.length).toLocaleString('en-US');
+    const done = this.results.length.toLocaleString('en-US');
     const total = (this.queue.length + this.results.length).toLocaleString('en-US');
 
     process.stdout.write(`\r${done}/${total} images calculated`);
@@ -223,7 +223,7 @@ export class BlueGemGenerator {
 
       acc[itemKey][paintType][imagePose].push({
         seed,
-        ...result
+        ...result,
       });
 
       return acc;
@@ -231,18 +231,25 @@ export class BlueGemGenerator {
 
     const sortedResult: ResultFormat = {};
 
-    Object.keys(grouped).sort().forEach(itemKey => {
-      sortedResult[itemKey] = {};
+    Object.keys(grouped)
+      .sort()
+      .forEach((itemKey) => {
+        sortedResult[itemKey] = {};
 
-      Object.keys(grouped[itemKey]!).sort().forEach(paintType => {
-        sortedResult[itemKey]![paintType] = {};
+        Object.keys(grouped[itemKey]!)
+          .sort()
+          .forEach((paintType) => {
+            sortedResult[itemKey]![paintType] = {};
 
-        Object.keys(grouped[itemKey]![paintType]!).sort().forEach(imagePose => {
-          sortedResult[itemKey]![paintType]![imagePose] = grouped[itemKey]![paintType]![imagePose]!
-            .sort((a, b) => b.blue - a.blue);
-        });
+            Object.keys(grouped[itemKey]![paintType]!)
+              .sort()
+              .forEach((imagePose) => {
+                sortedResult[itemKey]![paintType]![imagePose] = grouped[itemKey]![paintType]![imagePose]!.sort(
+                  (a, b) => b.blue - a.blue,
+                );
+              });
+          });
       });
-    });
 
     await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(sortedResult, null, 2));
   }
