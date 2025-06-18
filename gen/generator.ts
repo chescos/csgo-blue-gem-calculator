@@ -23,7 +23,7 @@ type ResultItem = QueueItem & {
 type ResultFormat = {
   [itemKey: string]: {
     [finishKey: string]: {
-      [imagePose: string]: Array<Array<number>>;
+      [imagePose: string]: Array<number>;
     };
   };
 };
@@ -211,8 +211,12 @@ export class BlueGemGenerator {
       if (!acc[itemKey][finishKey]) acc[itemKey][finishKey] = {};
       if (!acc[itemKey][finishKey][imagePose]) acc[itemKey][finishKey][imagePose] = [];
 
+      const index = seed * 4;
 
-      acc[itemKey][finishKey][imagePose][seed] = [result.blue, result.purple, result.gold, result.other];
+      acc[itemKey][finishKey][imagePose][index] = result.blue;
+      acc[itemKey][finishKey][imagePose][index + 1] = result.purple;
+      acc[itemKey][finishKey][imagePose][index + 2] = result.gold;
+      acc[itemKey][finishKey][imagePose][index + 3] = result.other;
 
       return acc;
     }, {} as ResultFormat);

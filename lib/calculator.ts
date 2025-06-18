@@ -54,12 +54,14 @@ class BlueGemCalculator {
       seed,
     };
 
+    const index = seed * 4;
+
     items[itemKey].images.forEach((imagePose) => {
       result[imagePose] = {
-        blue: json[itemKey][finishKey][imagePose][seed][0],
-        purple: json[itemKey][finishKey][imagePose][seed][1],
-        gold: json[itemKey][finishKey][imagePose][seed][2],
-        other: json[itemKey][finishKey][imagePose][seed][3],
+        blue: json[itemKey][finishKey][imagePose][index],
+        purple: json[itemKey][finishKey][imagePose][index + 1],
+        gold: json[itemKey][finishKey][imagePose][index + 2],
+        other: json[itemKey][finishKey][imagePose][index + 3],
       };
     });
 
