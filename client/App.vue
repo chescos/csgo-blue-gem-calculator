@@ -30,11 +30,10 @@ const data = {};
             purple: item.percentages[seed][key].purple,
             gold: item.percentages[seed][key].gold,
             other: item.percentages[seed][key].other,
-          })
+          });
         }
       }
-    })
-
+    });
   });
 });
 
@@ -118,9 +117,10 @@ export default {
 
   methods: {
     syncSortOrder() {
-      this.data[this.activeItem][this.activeFinish][this.activePose].sort((a, b) => this.activeSort === 'asc'
-        ? a[this.activeOrder] - b[this.activeOrder]
-        : b[this.activeOrder] - a[this.activeOrder],
+      this.data[this.activeItem][this.activeFinish][this.activePose].sort((a, b) =>
+        this.activeSort === 'asc'
+          ? a[this.activeOrder] - b[this.activeOrder]
+          : b[this.activeOrder] - a[this.activeOrder],
       );
     },
 
@@ -156,15 +156,16 @@ export default {
     titleCase(str) {
       return str
         .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
     },
 
     onSeedInputChange() {
       const newSeed = String(this.seedInput);
 
-      const index = this.data[this.activeItem][this.activeFinish][this.activePose]
-        .findIndex(s => String(s.seed) === newSeed);
+      const index = this.data[this.activeItem][this.activeFinish][this.activePose].findIndex(
+        (s) => String(s.seed) === newSeed,
+      );
 
       if (index !== -1) {
         this.activeIndex = index;
@@ -191,12 +192,12 @@ export default {
           </option>
         </select>
         <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-              <path
-                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-              ></path>
-            </svg>
-          </span>
+          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+            <path
+              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+            ></path>
+          </svg>
+        </span>
       </div>
     </div>
 
@@ -214,12 +215,12 @@ export default {
           </option>
         </select>
         <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-              <path
-                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-              ></path>
-            </svg>
-          </span>
+          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+            <path
+              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+            ></path>
+          </svg>
+        </span>
       </div>
     </div>
 
@@ -237,12 +238,12 @@ export default {
           </option>
         </select>
         <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-              <path
-                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-              ></path>
-            </svg>
-          </span>
+          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+            <path
+              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+            ></path>
+          </svg>
+        </span>
       </div>
     </div>
 
@@ -260,12 +261,12 @@ export default {
           </option>
         </select>
         <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-              <path
-                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-              ></path>
-            </svg>
-          </span>
+          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+            <path
+              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+            ></path>
+          </svg>
+        </span>
       </div>
     </div>
 
@@ -283,12 +284,12 @@ export default {
           </option>
         </select>
         <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
-            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
-              <path
-                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
-              ></path>
-            </svg>
-          </span>
+          <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+            <path
+              d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+            ></path>
+          </svg>
+        </span>
       </div>
     </div>
 
@@ -315,14 +316,16 @@ export default {
   <!-- Image -->
   <div class="flex">
     <button
-      class="text-gray-400  p-4"
+      class="text-gray-400 p-4"
       :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0 }"
       type="button"
       :disabled="activeIndex === 0"
       @click="activeIndex--"
     >
       <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
+        <path
+          d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"
+        />
       </svg>
     </button>
 
@@ -336,7 +339,9 @@ export default {
       @click="activeIndex++"
     >
       <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
+        <path
+          d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+        />
       </svg>
     </button>
   </div>
@@ -344,24 +349,24 @@ export default {
   <!-- Table -->
   <table class="table-fixed overflow-hidden w-full">
     <thead class="bg-gray-700 text-white text-left text-xs font-bold tracking-widest">
-    <tr>
-      <th class="p-4 uppercase">
-        Rank
-      </th>
-      <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
-        {{ value }}
-      </th>
-    </tr>
+      <tr>
+        <th class="p-4 uppercase">Rank</th>
+        <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
+          {{ value }}
+        </th>
+      </tr>
     </thead>
     <tbody class="text-gray-400 divide-y divide-gray-700">
-    <tr class="">
-      <td class="p-4">
-        #{{ activeIndex + 1 }}
-      </td>
-      <td v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4" :class="{ 'text-white': value === activeOrder }">
-        {{ data[activeItem][activeFinish][activePose][activeIndex][value].toFixed(2) }}%
-      </td>
-    </tr>
+      <tr class="">
+        <td class="p-4">#{{ activeIndex + 1 }}</td>
+        <td
+          v-for="value in ['blue', 'gold', 'purple', 'other']"
+          class="p-4"
+          :class="{ 'text-white': value === activeOrder }"
+        >
+          {{ data[activeItem][activeFinish][activePose][activeIndex][value].toFixed(2) }}%
+        </td>
+      </tr>
     </tbody>
   </table>
 </template>
