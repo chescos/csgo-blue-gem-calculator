@@ -23,7 +23,7 @@ type ResultItem = QueueItem & {
 type ResultFormat = {
   [itemKey: string]: {
     [finishKey: string]: {
-      [imagePose: string]: (PercentageNumbers & { seed: number })[];
+      [imagePose: string]: Array<Array<number>>;
     };
   };
 };
@@ -211,37 +211,13 @@ export class BlueGemGenerator {
       if (!acc[itemKey][finishKey]) acc[itemKey][finishKey] = {};
       if (!acc[itemKey][finishKey][imagePose]) acc[itemKey][finishKey][imagePose] = [];
 
-      acc[itemKey][finishKey][imagePose].push({
-        seed,
-        ...result,
-      });
+
+      acc[itemKey][finishKey][imagePose][seed] = [result.blue, result.purple, result.gold, result.other];
 
       return acc;
     }, {} as ResultFormat);
 
-    const sortedResult: ResultFormat = {};
-
-    Object.keys(grouped)
-      .sort()
-      .forEach((itemKey) => {
-        sortedResult[itemKey] = {};
-
-        Object.keys(grouped[itemKey]!)
-          .sort()
-          .forEach((finishKey) => {
-            sortedResult[itemKey]![finishKey] = {};
-
-            Object.keys(grouped[itemKey]![finishKey]!)
-              .sort()
-              .forEach((imagePose) => {
-                sortedResult[itemKey]![finishKey]![imagePose] = grouped[itemKey]![finishKey]![imagePose]!.sort(
-                  (a, b) => b.blue - a.blue,
-                );
-              });
-          });
-      });
-
-    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(sortedResult, null, 2));
+    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(grouped));
   }
 }
 
