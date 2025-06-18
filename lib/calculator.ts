@@ -9,8 +9,8 @@ interface PercentageResult extends Partial<Record<OptionalPoses, PercentageNumbe
 }
 
 interface PercentageResults {
-  item: ItemName,
-  percentages: Array<PercentageResult>
+  item: ItemName;
+  percentages: Array<PercentageResult>;
 }
 
 type FinishNameMap = { [finishName in FinishName]: FinishKey };
@@ -21,13 +21,9 @@ class BlueGemCalculator {
   private readonly itemNameMap: ItemNameMap;
 
   constructor() {
-    this.finishNameMap = Object.fromEntries(
-      Object.entries(finishes).map(([k, v]) => [v, k])
-    ) as FinishNameMap;
+    this.finishNameMap = Object.fromEntries(Object.entries(finishes).map(([k, v]) => [v, k])) as FinishNameMap;
 
-    this.itemNameMap = Object.fromEntries(
-      Object.entries(items).map(([k, v]) => [v.name, k])
-    ) as ItemNameMap;
+    this.itemNameMap = Object.fromEntries(Object.entries(items).map(([k, v]) => [v.name, k])) as ItemNameMap;
   }
 
   getList(finishName: FinishName): Array<PercentageResults> {
@@ -39,10 +35,7 @@ class BlueGemCalculator {
   getAllPercentages(finishName: FinishName, itemName: ItemName): PercentageResults {
     return {
       item: itemName,
-      percentages: Array.from(
-        { length: 1001 },
-        (_, seed) => this.getPercentages(finishName, itemName, seed),
-      ),
+      percentages: Array.from({ length: 1001 }, (_, seed) => this.getPercentages(finishName, itemName, seed)),
     };
   }
 
