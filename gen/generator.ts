@@ -2,41 +2,28 @@ import { readdir, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
-import { items, PaintType, ImagePose, ItemKey } from './items';
+import { items, ItemKey, FinishKey, ImagePose, PercentageNumbers } from './items';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Downloader from './downloader';
 import path from 'path';
 import { CaseHardenedClassifier } from './algorithm/classifier-case-hardened';
 
-type BlueGemPercentages = {
-  blue: number;
-  purple: number;
-  gold: number;
-  other: number;
-};
-
 type QueueItem = {
   itemKey: ItemKey;
-  paintType: PaintType;
+  finishKey: FinishKey;
   imagePose: ImagePose;
   seed: number;
 };
 
 type ResultItem = QueueItem & {
-  result: BlueGemPercentages;
+  result: PercentageNumbers;
 };
 
 type ResultFormat = {
   [itemKey: string]: {
-    [paintType: string]: {
-      [imagePose: string]: {
-        seed: number;
-        blue: number;
-        purple: number;
-        gold: number;
-        other: number;
-      }[];
+    [finishKey: string]: {
+      [imagePose: string]: (PercentageNumbers & { seed: number })[];
     };
   };
 };
@@ -51,28 +38,30 @@ export class BlueGemGenerator {
   }
 
   public static constructImageFileNameForTypeAndSeed(
-    slug: string,
-    type: PaintType,
+    key: ItemKey,
+    type: FinishKey,
     pose: ImagePose,
     seed: number,
   ): string {
-    return pose === 'default' ? `${slug}_${type}_${seed}.png` : `${slug}_${type}_${pose}_${seed}.png`;
+    return pose === 'default' ? `${key}_${type}_${seed}.png` : `${key}_${type}_${pose}_${seed}.png`;
   }
 
   getAllImageFiles(): string[] {
     const files: string[] = [];
 
-    Object.values(items).forEach((item): void => {
+    for (const itemKey of Object.keys(items) as ItemKey[]) {
+      const item = items[itemKey];
+
       item.types.forEach((type): void => {
         item.images.forEach((image): void => {
           for (let seed = 0; seed <= 1000; seed++) {
-            const fileName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(item.slug, type, image, seed);
+            const fileName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(itemKey, type, image, seed);
 
             files.push(fileName);
           }
         });
       });
-    });
+    }
 
     return files;
   }
@@ -107,11 +96,11 @@ export class BlueGemGenerator {
     }
   }
 
-  async calculateBlueGemPercentagesForImage(imagePath: string, paintType: PaintType): Promise<BlueGemPercentages> {
+  async calculateBlueGemPercentagesForImage(imagePath: string, finishKey: FinishKey): Promise<PercentageNumbers> {
     //const startTime = Date.now();
     const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
-    const classifier = paintType === 'ht' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
+    const classifier = finishKey === 'ht' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
 
     const count = [0, 0, 0, 0];
     let totalCount = 0;
@@ -153,12 +142,12 @@ export class BlueGemGenerator {
     for (const itemKey of Object.keys(items) as ItemKey[]) {
       const item = items[itemKey];
 
-      item.types.forEach((paintType): void => {
+      item.types.forEach((finishKey): void => {
         item.images.forEach((imagePose): void => {
           for (let seed = 0; seed <= 1000; seed++) {
             this.queue.push({
               itemKey,
-              paintType,
+              finishKey,
               imagePose,
               seed,
             });
@@ -186,15 +175,15 @@ export class BlueGemGenerator {
 
     while ((queueItem = this.queue.shift()) !== undefined) {
       const imageName = BlueGemGenerator.constructImageFileNameForTypeAndSeed(
-        items[queueItem.itemKey].slug,
-        queueItem.paintType,
+        queueItem.itemKey,
+        queueItem.finishKey,
         queueItem.imagePose,
         queueItem.seed,
       );
 
       const imagePath = `./images/${imageName}`;
 
-      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.paintType);
+      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.finishKey);
 
       this.results.push({
         ...queueItem,
@@ -216,13 +205,13 @@ export class BlueGemGenerator {
     // TODO: We either need to compress the data a lot for out NPM package, or fetch it from a URL,
     //  so that the NPM package does not get too large.
     const grouped = this.results.reduce((acc, item) => {
-      const { itemKey, paintType, imagePose, seed, result } = item;
+      const { itemKey, finishKey, imagePose, seed, result } = item;
 
       if (!acc[itemKey]) acc[itemKey] = {};
-      if (!acc[itemKey][paintType]) acc[itemKey][paintType] = {};
-      if (!acc[itemKey][paintType][imagePose]) acc[itemKey][paintType][imagePose] = [];
+      if (!acc[itemKey][finishKey]) acc[itemKey][finishKey] = {};
+      if (!acc[itemKey][finishKey][imagePose]) acc[itemKey][finishKey][imagePose] = [];
 
-      acc[itemKey][paintType][imagePose].push({
+      acc[itemKey][finishKey][imagePose].push({
         seed,
         ...result,
       });
@@ -239,13 +228,13 @@ export class BlueGemGenerator {
 
         Object.keys(grouped[itemKey]!)
           .sort()
-          .forEach((paintType) => {
-            sortedResult[itemKey]![paintType] = {};
+          .forEach((finishKey) => {
+            sortedResult[itemKey]![finishKey] = {};
 
-            Object.keys(grouped[itemKey]![paintType]!)
+            Object.keys(grouped[itemKey]![finishKey]!)
               .sort()
               .forEach((imagePose) => {
-                sortedResult[itemKey]![paintType]![imagePose] = grouped[itemKey]![paintType]![imagePose]!.sort(
+                sortedResult[itemKey]![finishKey]![imagePose] = grouped[itemKey]![finishKey]![imagePose]!.sort(
                   (a, b) => b.blue - a.blue,
                 );
               });
