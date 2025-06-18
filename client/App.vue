@@ -47,6 +47,7 @@ export default {
       activeIndex: 0,
       activeOrder: 'blue',
       activeSort: 'desc',
+      activeImages: false,
       seedInput: null,
       imageCache: {},
       screenshotUrl: null,
@@ -111,6 +112,10 @@ export default {
       this.syncActiveIndex();
       this.syncSortOrder();
       this.syncSeedInput();
+      this.syncScreenshotUrl();
+    },
+
+    activeImages() {
       this.syncScreenshotUrl();
     },
   },
@@ -310,6 +315,17 @@ export default {
           @input="onSeedInputChange"
         />
       </div>
+    </div>
+
+    <!-- Pose Images Toggle -->
+    <div class="mx-4">
+      <label class="uppercase font-bold text-xs tracking-widest" for="seed">Pose Images</label>
+      <label class="block items-center cursor-pointer mt-2">
+        <input type="checkbox" v-model="activeImages" class="sr-only peer" />
+        <span
+          class="block relative w-20 h-11 bg-gray-700 peer-focus:outline-none rounded peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded after:h-9 after:w-9 after:transition-all peer-checked:bg-blue-600"
+        ></span>
+      </label>
     </div>
   </div>
 
