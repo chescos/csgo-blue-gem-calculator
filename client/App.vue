@@ -48,6 +48,7 @@ export default {
       activeIndex: 0,
       activeOrder: 'blue',
       activeSort: 'desc',
+      seedInput: null,
       imageCache: {},
       screenshotUrl: null,
     };
@@ -55,6 +56,7 @@ export default {
 
   created() {
     this.syncSortOrder();
+    this.syncSeedInput();
     this.syncScreenshotUrl();
   },
 
@@ -74,6 +76,7 @@ export default {
       this.syncActivePose();
       this.syncActiveIndex();
       this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
@@ -81,25 +84,34 @@ export default {
       this.syncActivePose();
       this.syncActiveIndex();
       this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
     activePose() {
+      this.syncActiveIndex();
       this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
     activeIndex() {
+      this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
     activeOrder() {
+      this.syncActiveIndex();
       this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
     activeSort() {
+      this.syncActiveIndex();
       this.syncSortOrder();
+      this.syncSeedInput();
       this.syncScreenshotUrl();
     },
   },
@@ -137,11 +149,26 @@ export default {
       this.activeIndex = 0;
     },
 
+    syncSeedInput() {
+      this.seedInput = String(this.data[this.activeItem][this.activeFinish][this.activePose][this.activeIndex].seed);
+    },
+
     titleCase(str) {
       return str
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+    },
+
+    onSeedInputChange() {
+      const newSeed = String(this.seedInput);
+
+      const index = this.data[this.activeItem][this.activeFinish][this.activePose]
+        .findIndex(s => String(s.seed) === newSeed);
+
+      if (index !== -1) {
+        this.activeIndex = index;
+      }
     },
   },
 };
@@ -278,6 +305,8 @@ export default {
           class="w-24 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Seed"
           aria-label="Seed"
+          v-model="seedInput"
+          @input="onSeedInputChange"
         />
       </div>
     </div>
@@ -314,8 +343,11 @@ export default {
 
   <!-- Table -->
   <table class="table-fixed overflow-hidden w-full">
-    <thead class="bg-gray-700 text-white text-left text-sm font-medium">
+    <thead class="bg-gray-700 text-white text-left text-xs font-bold tracking-widest">
     <tr>
+      <th class="p-4 uppercase">
+        Rank
+      </th>
       <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
         <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
           {{ key }} {{ value }}
@@ -325,6 +357,9 @@ export default {
     </thead>
     <tbody class="text-gray-400 divide-y divide-gray-700">
     <tr class="">
+      <td class="p-4">
+        #{{ activeIndex + 1 }}
+      </td>
       <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
         <td v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4">
           {{ data[activeItem][activeFinish][key][activeIndex][value].toFixed(2) }}%
