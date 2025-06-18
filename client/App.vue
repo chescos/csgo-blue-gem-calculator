@@ -196,7 +196,7 @@ export default {
             {{ key }}
           </option>
         </select>
-        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
             <path
               d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
@@ -219,7 +219,7 @@ export default {
             {{ key }}
           </option>
         </select>
-        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
             <path
               d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
@@ -242,7 +242,7 @@ export default {
             {{ titleCase(key) }}
           </option>
         </select>
-        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
             <path
               d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
@@ -265,7 +265,7 @@ export default {
             {{ value }}
           </option>
         </select>
-        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
             <path
               d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
@@ -288,7 +288,7 @@ export default {
             {{ value }}
           </option>
         </select>
-        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+        <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
             <path
               d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
@@ -323,7 +323,7 @@ export default {
       <label class="block items-center cursor-pointer mt-2">
         <input type="checkbox" v-model="activeImages" class="sr-only peer" />
         <span
-          class="block relative w-20 h-11 bg-gray-700 peer-focus:outline-none rounded peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded after:h-9 after:w-9 after:transition-all peer-checked:bg-blue-600"
+          class="block relative w-20 h-11 bg-gray-700 peer-focus:outline-none rounded peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded after:h-9 after:w-9 after:transition-all peer-checked:bg-blue-600 transition-colors"
         ></span>
       </label>
     </div>
@@ -332,13 +332,13 @@ export default {
   <!-- Image -->
   <div class="flex">
     <button
-      class="text-gray-400 p-4"
+      class="transition-colors focus:outline-none text-gray-400 p-4"
       :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0 }"
       type="button"
       :disabled="activeIndex === 0"
       @click="activeIndex--"
     >
-      <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+      <svg class="h-11 w-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path
           d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"
         />
@@ -348,13 +348,13 @@ export default {
     <img class="block w-auto mx-auto max-h-[50vh] my-20" :src="screenshotUrl" alt="Screenshot" />
 
     <button
-      class="text-gray-400 p-4"
+      class="transition-colors focus:outline-none text-gray-400 p-4"
       :class="{ 'hover:text-white cursor-pointer': activeIndex !== 1000 }"
       type="button"
       :disabled="activeIndex === 1000"
       @click="activeIndex++"
     >
-      <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+      <svg class="h-11 w-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path
           d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
         />
