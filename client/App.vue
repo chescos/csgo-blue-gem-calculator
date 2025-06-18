@@ -319,7 +319,7 @@ export default {
           min="0"
           max="1000"
           step="1"
-          class="w-24 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+          class="w-24 rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           placeholder="Seed"
           aria-label="Seed"
           v-model="seedInput"
@@ -362,7 +362,7 @@ export default {
     <button
       aria-label="Next Seed"
       class="transition-colors focus:outline-none text-gray-400 p-4"
-      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 1000 }"
+      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 1000, 'opacity-30': activeIndex === 1000 }"
       type="button"
       :disabled="activeIndex === 1000"
       @click="activeIndex++"
