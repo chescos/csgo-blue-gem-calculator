@@ -204,7 +204,7 @@ export default {
         </svg>
         <span>Item</span>
       </label>
-      <div class="relative mt-2">
+      <div class="relative mt-3">
         <select
           id="item"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
@@ -234,7 +234,7 @@ export default {
         </svg>
         <span>Finish</span>
       </label>
-      <div class="relative mt-2">
+      <div class="relative mt-3">
         <select
           id="finish"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
@@ -264,7 +264,7 @@ export default {
         </svg>
         <span>Pose</span>
       </label>
-      <div class="relative mt-2">
+      <div class="relative mt-3">
         <select
           id="pose"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
@@ -294,7 +294,7 @@ export default {
         </svg>
         <span>Order</span>
       </label>
-      <div class="relative mt-2">
+      <div class="relative mt-3">
         <select
           id="order"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
@@ -324,7 +324,7 @@ export default {
         </svg>
         <span>Sort</span>
       </label>
-      <div class="relative mt-2">
+      <div class="relative mt-3">
         <select
           id="sort"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
@@ -354,7 +354,7 @@ export default {
         </svg>
         <span>Seed</span>
       </label>
-      <div class="mt-2">
+      <div class="mt-3">
         <input
           id="seed"
           type="number"
@@ -380,7 +380,7 @@ export default {
         </svg>
         <span>Pose Images</span>
       </label>
-      <label class="block items-center cursor-pointer mt-2">
+      <label class="block items-center cursor-pointer mt-3">
         <input type="checkbox" v-model="activeImages" class="sr-only peer" />
         <span
           class="block relative w-20 h-11 bg-gray-700 peer-focus:outline-none rounded peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded after:h-9 after:w-9 after:transition-all peer-checked:bg-blue-600 transition-colors"
