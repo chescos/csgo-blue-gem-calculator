@@ -12,6 +12,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "bundler",
     "isolatedModules": true
   }
