@@ -3,14 +3,47 @@ import BlueGemCalculator from '../lib/main.js';
 
 const calculator = new BlueGemCalculator();
 
-const data = calculator.getData();
+const data = {};
+
+[
+  {
+    finish: 'Case Hardened',
+    data: calculator.getList('Case Hardened'),
+  },
+  {
+    finish: 'Heat Treated',
+    data: calculator.getList('Heat Treated'),
+  },
+].forEach((list) => {
+  list.data.forEach((item) => {
+    if (!data[item.item]) data[item.item] = {};
+    if (!data[item.item][list.finish]) data[item.item][list.finish] = {};
+
+    Object.keys(item.percentages[0]).forEach((key) => {
+      if (key !== 'seed') {
+        if (!data[item.item][list.finish][key]) data[item.item][list.finish][key] = [];
+
+        for (let seed = 0; seed <= 1000; seed++) {
+          data[item.item][list.finish][key].push({
+            seed,
+            blue: item.percentages[seed][key].blue,
+            purple: item.percentages[seed][key].purple,
+            gold: item.percentages[seed][key].gold,
+            other: item.percentages[seed][key].other,
+          })
+        }
+      }
+    })
+
+  });
+});
 
 export default {
   data() {
     return {
       data,
-      activeItem: 'ak47',
-      activePaint: 'ch',
+      activeItem: 'AK-47',
+      activeFinish: 'Case Hardened',
       activePose: 'playside',
       activeIndex: 0,
       imageCache: {},
@@ -34,39 +67,39 @@ export default {
     },
 
     activeItem() {
-      this.sync();
-    },
-
-    activePaint() {
-      this.sync();
-    },
-  },
-
-  methods: {
-    sync() {
-      this.syncActivePaint();
+      this.syncActiveFinish();
       this.syncActivePose();
       this.syncActiveIndex();
       this.syncScreenshotUrl();
     },
 
+    activeFinish() {
+      this.syncActivePose();
+      this.syncActiveIndex();
+      this.syncScreenshotUrl();
+    },
+  },
+
+  methods: {
     syncScreenshotUrl() {
-      const selectedSeed = this.data[this.activeItem][this.activePaint][this.activePose][this.activeIndex];
+      const selectedSeed = this.data[this.activeItem][this.activeFinish][this.activePose][this.activeIndex];
+      const itemKey = calculator.itemNameToKey(this.activeItem);
+      const finishKey = calculator.finishNameToKey(this.activeFinish);
 
       const fileName =
         this.activePose === 'default'
-          ? `${this.activeItem}_${this.activePaint}_${selectedSeed.seed}.png`
-          : `${this.activeItem}_${this.activePaint}_${this.activePose}_${selectedSeed.seed}.png`;
+          ? `${itemKey}_${finishKey}_${selectedSeed.seed}.png`
+          : `${itemKey}_${finishKey}_${this.activePose}_${selectedSeed.seed}.png`;
 
       this.screenshotUrl = `https://cdn.csgoskins.gg/public/images/gems/v1/${fileName}`;
     },
 
-    syncActivePaint() {
-      this.activePaint = this.data[this.activeItem].ch ? 'ch' : 'ht';
+    syncActiveFinish() {
+      this.activeFinish = this.data[this.activeItem]['Case Hardened'] ? 'Case Hardened' : 'Heat Treated';
     },
 
     syncActivePose() {
-      this.activePose = this.data[this.activeItem][this.activePaint].default ? 'default' : 'playside';
+      this.activePose = this.data[this.activeItem][this.activeFinish].default ? 'default' : 'playside';
     },
 
     syncActiveIndex() {
@@ -102,13 +135,13 @@ export default {
         </div>
       </div>
 
-      <!-- Paint Select -->
+      <!-- Finish Select -->
       <div class="flex-none ml-0 sm:ml-12">
         <div class="relative">
           <select
             class="w-48 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
-            v-model="activePaint"
-            aria-label="Paint"
+            v-model="activeFinish"
+            aria-label="Finish"
           >
             <option v-for="(value, key) in data[activeItem]" :value="key">
               {{ key }}
@@ -147,7 +180,7 @@ export default {
     <table class="rounded table-fixed overflow-hidden w-full">
       <thead class="bg-gray-700 text-white text-left text-sm font-medium">
         <tr>
-          <template v-for="(value, key) in data[activeItem][activePaint]" :key="key">
+          <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
             <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="px-4 py-3 uppercase">
               {{ key }} {{ value }}
             </th>
@@ -156,9 +189,9 @@ export default {
       </thead>
       <tbody class="text-gray-400 divide-y divide-gray-700">
         <tr class="">
-          <template v-for="(value, key) in data[activeItem][activePaint]" :key="key">
+          <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
             <td v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4">
-              {{ data[activeItem][activePaint][key][activeIndex][value].toFixed(2) }}%
+              {{ data[activeItem][activeFinish][key][activeIndex][value].toFixed(2) }}%
             </td>
           </template>
         </tr>

@@ -69,11 +69,11 @@ class BlueGemCalculator {
       .map((item) => item.name);
   }
 
-  private finishNameToKey(finishName: FinishName): FinishKey {
+  finishNameToKey(finishName: FinishName): FinishKey {
     return this.finishNameMap[finishName];
   }
 
-  private itemNameToKey(itemName: ItemName): ItemKey {
+  itemNameToKey(itemName: ItemName): ItemKey {
     return this.itemNameMap[itemName];
   }
 }
