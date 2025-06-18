@@ -46,12 +46,15 @@ export default {
       activeFinish: 'Case Hardened',
       activePose: 'playside',
       activeIndex: 0,
+      activeOrder: 'blue',
+      activeSort: 'desc',
       imageCache: {},
       screenshotUrl: null,
     };
   },
 
   created() {
+    this.syncSortOrder();
     this.syncScreenshotUrl();
   },
 
@@ -70,17 +73,41 @@ export default {
       this.syncActiveFinish();
       this.syncActivePose();
       this.syncActiveIndex();
+      this.syncSortOrder();
       this.syncScreenshotUrl();
     },
 
     activeFinish() {
       this.syncActivePose();
       this.syncActiveIndex();
+      this.syncSortOrder();
+      this.syncScreenshotUrl();
+    },
+
+    activePose() {
+      this.syncSortOrder();
+      this.syncScreenshotUrl();
+    },
+
+    activeOrder() {
+      this.syncSortOrder();
+      this.syncScreenshotUrl();
+    },
+
+    activeSort() {
+      this.syncSortOrder();
       this.syncScreenshotUrl();
     },
   },
 
   methods: {
+    syncSortOrder() {
+      this.data[this.activeItem][this.activeFinish][this.activePose].sort((a, b) => this.activeSort === 'asc'
+        ? a[this.activeOrder] - b[this.activeOrder]
+        : b[this.activeOrder] - a[this.activeOrder],
+      );
+    },
+
     syncScreenshotUrl() {
       const selectedSeed = this.data[this.activeItem][this.activeFinish][this.activePose][this.activeIndex];
       const itemKey = calculator.itemNameToKey(this.activeItem);
@@ -105,21 +132,29 @@ export default {
     syncActiveIndex() {
       this.activeIndex = 0;
     },
+
+    titleCase(str) {
+      return str
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    },
   },
 };
 </script>
 
 <template>
-  <div class="p-4 sm:p-12">
+  <div class="p-4">
     <!-- Top Menu -->
     <div class="flex flex-wrap items-center justify-center">
       <!-- Item Select -->
-      <div class="flex-none ml-0 sm:ml-12">
-        <div class="relative">
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="item">Item</label>
+        <div class="relative mt-2">
           <select
-            class="w-48 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="item"
+            class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
             v-model="activeItem"
-            aria-label="Item"
           >
             <option v-for="(value, key) in data" :value="key">
               {{ key }}
@@ -136,12 +171,13 @@ export default {
       </div>
 
       <!-- Finish Select -->
-      <div class="flex-none ml-0 sm:ml-12">
-        <div class="relative">
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="finish">Finish</label>
+        <div class="relative mt-2">
           <select
-            class="w-48 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="finish"
+            class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
             v-model="activeFinish"
-            aria-label="Finish"
           >
             <option v-for="(value, key) in data[activeItem]" :value="key">
               {{ key }}
@@ -157,17 +193,90 @@ export default {
         </div>
       </div>
 
+      <!-- Pose Select -->
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="pose">Pose</label>
+        <div class="relative mt-2">
+          <select
+            id="pose"
+            class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            v-model="activePose"
+          >
+            <option v-for="(value, key) in data[activeItem][activeFinish]" :value="key">
+              {{ titleCase(key) }}
+            </option>
+          </select>
+          <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+              <path
+                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Order Select -->
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="order">Order</label>
+        <div class="relative mt-2">
+          <select
+            id="order"
+            class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            v-model="activeOrder"
+          >
+            <option v-for="(value, key) in { blue: 'Blue', purple: 'Purple', gold: 'Gold', other: 'Other' }" :value="key">
+              {{ value }}
+            </option>
+          </select>
+          <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+              <path
+                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <!-- Sort Select -->
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="sort">Sort</label>
+        <div class="relative mt-2">
+          <select
+            id="sort"
+            class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            v-model="activeSort"
+          >
+            <option v-for="(value, key) in { desc: 'Descending', asc: 'Ascending' }" :value="key">
+              {{ value }}
+            </option>
+          </select>
+          <span class="absolute text-gray-200 inset-y-0 right-0 flex items-center pr-3">
+            <svg class="w-3 h-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 7">
+              <path
+                d="M11.261 2.02A.96.96 0 009.941.623L6 4.35 2.06.623A.96.96 0 00.74 2.02l4.573 4.33a1 1 0 001.374 0l4.574-4.33z"
+              ></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+
       <!-- Seed Input -->
-      <div class="flex-none ml-4">
-        <input
-          type="number"
-          min="0"
-          max="1000"
-          step="1"
-          class="w-24 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="Seed"
-          aria-label="Seed"
-        />
+      <div class="mx-4">
+        <label class="uppercase font-bold text-xs tracking-widest" for="seed">Seed</label>
+        <div class="mt-2">
+          <input
+            id="seed"
+            type="number"
+            min="0"
+            max="1000"
+            step="1"
+            class="w-24 appearance-none rounded p-3 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Seed"
+            aria-label="Seed"
+          />
+        </div>
       </div>
     </div>
 
