@@ -255,7 +255,7 @@ export default {
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
           v-model="activeOrder"
         >
-          <option v-for="(value, key) in { blue: 'Blue', purple: 'Purple', gold: 'Gold', other: 'Other' }" :value="key">
+          <option v-for="(value, key) in { blue: 'Blue', gold: 'Gold', purple: 'Purple', other: 'Other' }" :value="key">
             {{ value }}
           </option>
         </select>
@@ -348,11 +348,9 @@ export default {
       <th class="p-4 uppercase">
         Rank
       </th>
-      <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
-        <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
-          {{ key }} {{ value }}
-        </th>
-      </template>
+      <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
+        {{ value }}
+      </th>
     </tr>
     </thead>
     <tbody class="text-gray-400 divide-y divide-gray-700">
@@ -360,11 +358,9 @@ export default {
       <td class="p-4">
         #{{ activeIndex + 1 }}
       </td>
-      <template v-for="(value, key) in data[activeItem][activeFinish]" :key="key">
-        <td v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4">
-          {{ data[activeItem][activeFinish][key][activeIndex][value].toFixed(2) }}%
-        </td>
-      </template>
+      <td v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4" :class="{ 'text-white': value === activeOrder }">
+        {{ data[activeItem][activeFinish][activePose][activeIndex][value].toFixed(2) }}%
+      </td>
     </tr>
     </tbody>
   </table>
