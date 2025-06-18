@@ -196,7 +196,12 @@ export default {
   <div class="flex flex-wrap items-center justify-center p-4">
     <!-- Item Select -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="item">Item</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="item">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+          <path d="M528 56c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 8L32 64C14.3 64 0 78.3 0 96L0 208c0 17.7 14.3 32 32 32l10 0c20.8 0 36.1 19.6 31 39.8L33 440.2c-2.4 9.6-.2 19.7 5.8 27.5S54.1 480 64 480l96 0c14.7 0 27.5-10 31-24.2L217 352l104.5 0c23.7 0 44.8-14.9 52.7-37.2L400.9 240l31.1 0c8.5 0 16.6-3.4 22.6-9.4L477.3 208l66.7 0c17.7 0 32-14.3 32-32l0-80c0-17.7-14.3-32-32-32l-16 0 0-8zM321.4 304L229 304l16-64 105 0-21 58.7c-1.1 3.2-4.2 5.3-7.5 5.3zM80 128l384 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 160c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
+        </svg>
+        <span>Item</span>
+      </label>
       <div class="relative mt-2">
         <select
           id="item"
@@ -219,7 +224,12 @@ export default {
 
     <!-- Finish Select -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="finish">Finish</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="finish">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3L344 320c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+        </svg>
+        <span>Finish</span>
+      </label>
       <div class="relative mt-2">
         <select
           id="finish"
@@ -242,7 +252,12 @@ export default {
 
     <!-- Pose Select -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="pose">Pose</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="pose">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path d="M149.1 64.8L138.7 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-74.7 0L362.9 64.8C356.4 45.2 338.1 32 317.4 32L194.6 32c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/>
+        </svg>
+        <span>Pose</span>
+      </label>
       <div class="relative mt-2">
         <select
           id="pose"
@@ -265,7 +280,12 @@ export default {
 
     <!-- Order Select -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="order">Order</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="order">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+          <path d="M264.5 5.2c14.9-6.9 32.1-6.9 47 0l218.6 101c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 149.8C37.4 145.8 32 137.3 32 128s5.4-17.9 13.9-21.8L264.5 5.2zM476.9 209.6l53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 277.8C37.4 273.8 32 265.3 32 256s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0l152-70.2zm-152 198.2l152-70.2 53.2 24.6c8.5 3.9 13.9 12.4 13.9 21.8s-5.4 17.9-13.9 21.8l-218.6 101c-14.9 6.9-32.1 6.9-47 0L45.9 405.8C37.4 401.8 32 393.3 32 384s5.4-17.9 13.9-21.8l53.2-24.6 152 70.2c23.4 10.8 50.4 10.8 73.8 0z"/>
+        </svg>
+        <span>Order</span>
+      </label>
       <div class="relative mt-2">
         <select
           id="order"
@@ -288,7 +308,12 @@ export default {
 
     <!-- Sort Select -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="sort">Sort</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="sort">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <path d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8L32 224c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8l256 0c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z"/>
+        </svg>
+        <span>Sort</span>
+      </label>
       <div class="relative mt-2">
         <select
           id="sort"
@@ -311,7 +336,12 @@ export default {
 
     <!-- Seed Input -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="seed">Seed</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="seed">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path d="M512 32c0 113.6-84.6 207.5-194.2 222c-7.1-53.4-30.6-101.6-65.3-139.3C290.8 46.3 364 0 448 0l32 0c17.7 0 32 14.3 32 32zM0 96C0 78.3 14.3 64 32 64l32 0c123.7 0 224 100.3 224 224l0 32 0 160c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-160C100.3 320 0 219.7 0 96z"/>
+        </svg>
+        <span>Seed</span>
+      </label>
       <div class="mt-2">
         <input
           id="seed"
@@ -330,7 +360,12 @@ export default {
 
     <!-- Pose Images Toggle -->
     <div class="mx-4">
-      <label class="uppercase font-bold text-xs tracking-widest" for="seed">Pose Images</label>
+      <label class="uppercase font-bold text-xs tracking-widest flex" for="seed">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+          <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/>
+        </svg>
+        <span>Pose Images</span>
+      </label>
       <label class="block items-center cursor-pointer mt-2">
         <input type="checkbox" v-model="activeImages" class="sr-only peer" />
         <span
