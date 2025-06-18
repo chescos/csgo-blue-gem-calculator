@@ -145,12 +145,18 @@ export default {
       const itemKey = calculator.itemNameToKey(this.activeItem);
       const finishKey = calculator.finishNameToKey(this.activeFinish);
 
-      const fileName =
-        this.activePose === 'default'
-          ? `${itemKey}_${finishKey}_${selectedSeed.seed}.png`
-          : `${itemKey}_${finishKey}_${this.activePose}_${selectedSeed.seed}.png`;
+      let baseUrl;
+      let fileName;
 
-      this.screenshotUrl = `https://cdn.csgoskins.gg/public/images/gems/v1/${fileName}`;
+      if (this.activeImages) {
+        baseUrl = 'https://cdn.csgoskins.gg/public/images/gems/v2/poses/';
+        fileName = `${itemKey}_${finishKey}_${this.activePose}_${selectedSeed.seed}.avif`;
+      } else {
+        baseUrl = 'https://cdn.csgoskins.gg/public/images/gems/v2/screenshots/';
+        fileName = `${itemKey}_${finishKey}_playside_${selectedSeed.seed}.avif`;
+      }
+
+      this.screenshotUrl = `${baseUrl}${fileName}`;
     },
 
     syncActiveFinish() {
@@ -158,7 +164,7 @@ export default {
     },
 
     syncActivePose() {
-      this.activePose = this.data[this.activeItem][this.activeFinish].default ? 'default' : 'playside';
+      this.activePose = 'playside';
     },
 
     syncActiveIndex() {

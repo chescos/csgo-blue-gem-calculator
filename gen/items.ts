@@ -9,7 +9,7 @@ export type FinishKey = 'ch' | 'ht';
 
 export type FinishName = 'Case Hardened' | 'Heat Treated';
 
-export type ImagePose = 'default' | 'frontview' | 'playside' | 'backside';
+export type ImagePose = 'playside' | 'backside' | 'frontview';
 
 export type ItemName =
   | 'AK-47'
@@ -73,122 +73,122 @@ export const items: Record<ItemKey, Item> = {
   ak47: {
     name: 'AK-47',
     types: ['ch'],
-    images: ['frontview', 'playside'],
+    images: ['playside', 'frontview'],
   },
   bayonet: {
     name: 'Bayonet',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   bowie: {
     name: 'Bowie Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   butterfly: {
     name: 'Butterfly Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   classic: {
     name: 'Classic Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   deagle: {
     name: 'Desert Eagle',
     types: ['ht'],
-    images: ['default'],
+    images: ['playside'],
   },
   falchion: {
     name: 'Falchion Knife',
     types: ['ch'],
-    images: ['default'],
+    images: ['playside'],
   },
   fiveseven: {
     name: 'Five-SeveN',
     types: ['ch', 'ht'],
-    images: ['default'],
+    images: ['playside'],
   },
   flip: {
     name: 'Flip Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   gut: {
     name: 'Gut Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   huntsman: {
     name: 'Huntsman Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   karambit: {
     name: 'Karambit',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   kukri: {
     name: 'Kukri Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   m9_bayonet: {
     name: 'M9 Bayonet',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   mac10: {
     name: 'MAC-10',
     types: ['ch'],
-    images: ['default'],
+    images: ['playside'],
   },
   navaja: {
     name: 'Navaja Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   nomad: {
     name: 'Nomad Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   paracord: {
     name: 'Paracord Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   shadow: {
     name: 'Shadow Daggers',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   skeleton: {
     name: 'Skeleton Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   stiletto: {
     name: 'Stiletto Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   survival: {
     name: 'Survival Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   talon: {
     name: 'Talon Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
   ursus: {
     name: 'Ursus Knife',
     types: ['ch'],
-    images: ['default', 'backside'],
+    images: ['playside', 'backside'],
   },
 };
 

@@ -43,7 +43,7 @@ export class BlueGemGenerator {
     pose: ImagePose,
     seed: number,
   ): string {
-    return pose === 'default' ? `${key}_${type}_${seed}.png` : `${key}_${type}_${pose}_${seed}.png`;
+    return `${key}_${type}_${pose}_${seed}.avif`;
   }
 
   getAllImageFiles(): string[] {
@@ -77,7 +77,7 @@ export class BlueGemGenerator {
       fileSet.add(file.name);
     });
 
-    const baseUrl: string = 'https://cdn.csgoskins.gg/public/images/gems/v1/';
+    const baseUrl: string = 'https://cdn.csgoskins.gg/public/images/gems/v2/poses/';
 
     const urls: string[] = [];
 
