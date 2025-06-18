@@ -55,6 +55,7 @@ export default {
   },
 
   created() {
+    this.registerArrowHandling();
     this.syncSortOrder();
     this.syncSeedInput();
     this.syncScreenshotUrl();
@@ -121,6 +122,16 @@ export default {
   },
 
   methods: {
+    registerArrowHandling() {
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'ArrowLeft' && this.activeIndex > 0) {
+          this.activeIndex--;
+        } else if (e.code === 'ArrowRight' && this.activeIndex < 1000) {
+          this.activeIndex++;
+        }
+      });
+    },
+
     syncSortOrder() {
       this.data[this.activeItem][this.activeFinish][this.activePose].sort((a, b) =>
         this.activeSort === 'asc'
@@ -332,6 +343,7 @@ export default {
   <!-- Image -->
   <div class="flex">
     <button
+      aria-label="Previous Seed"
       class="transition-colors focus:outline-none text-gray-400 p-4"
       :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0, 'opacity-30': activeIndex === 0 }"
       type="button"
@@ -348,6 +360,7 @@ export default {
     <img class="block w-auto mx-auto max-h-[50vh] my-20" :src="screenshotUrl" alt="Screenshot" />
 
     <button
+      aria-label="Next Seed"
       class="transition-colors focus:outline-none text-gray-400 p-4"
       :class="{ 'hover:text-white cursor-pointer': activeIndex !== 1000 }"
       type="button"
