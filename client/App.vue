@@ -333,7 +333,7 @@ export default {
   <div class="flex">
     <button
       class="transition-colors focus:outline-none text-gray-400 p-4"
-      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0 }"
+      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0, 'opacity-30': activeIndex === 0 }"
       type="button"
       :disabled="activeIndex === 0"
       @click="activeIndex--"
@@ -367,8 +367,14 @@ export default {
     <thead class="bg-gray-700 text-white text-left text-xs font-bold tracking-widest">
       <tr>
         <th class="p-4 uppercase">Rank</th>
-        <th v-for="value in ['blue', 'gold', 'purple', 'other']" class="p-4 uppercase">
-          {{ value }}
+        <th
+          v-for="(key, value) in { blue: 'bg-blue-600', 'gold': 'bg-yellow-500', 'purple': 'bg-purple-600', 'other': 'bg-stone-400'}"
+          class="p-4 uppercase"
+        >
+          <div class="flex items-center">
+            <div class="rounded-full h-5 w-5 mr-2" :class="key"></div>
+            <div>{{ value }}</div>
+          </div>
         </th>
       </tr>
     </thead>
