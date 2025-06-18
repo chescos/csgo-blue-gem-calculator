@@ -89,6 +89,10 @@ export default {
       this.syncScreenshotUrl();
     },
 
+    activeIndex() {
+      this.syncScreenshotUrl();
+    },
+
     activeOrder() {
       this.syncSortOrder();
       this.syncScreenshotUrl();
@@ -281,7 +285,13 @@ export default {
 
   <!-- Image -->
   <div class="flex">
-    <button class="text-gray-400 hover:text-white cursor-pointer p-4" type="button">
+    <button
+      class="text-gray-400  p-4"
+      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 0 }"
+      type="button"
+      :disabled="activeIndex === 0"
+      @click="activeIndex--"
+    >
       <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
       </svg>
@@ -289,7 +299,13 @@ export default {
 
     <img class="block w-auto mx-auto max-h-[50vh] my-20" :src="screenshotUrl" alt="Screenshot" />
 
-    <button class="text-gray-400 hover:text-white cursor-pointer p-4" type="button">
+    <button
+      class="text-gray-400 p-4"
+      :class="{ 'hover:text-white cursor-pointer': activeIndex !== 1000 }"
+      type="button"
+      :disabled="activeIndex === 1000"
+      @click="activeIndex++"
+    >
       <svg class="w-10 h-auto" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
       </svg>
