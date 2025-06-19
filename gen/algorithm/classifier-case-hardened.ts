@@ -11,7 +11,7 @@ export class CaseHardenedClassifier extends BaseClassifier {
   }
 
   static isPurple(hue: number, saturation: number, brightness: number): boolean {
-    if ((hue < 270 || hue >= 360) && (hue < 0 || hue >= 18)) return false;
+    if ((hue < 230 || hue >= 360) && (hue < 0 || hue >= 18)) return false;
     if (saturation < 0.2 || saturation >= 1.0) return false;
     if (brightness < 0.1 || brightness >= 1.0) return false;
 

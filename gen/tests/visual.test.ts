@@ -1,11 +1,12 @@
-import { test, expect } from 'vitest';
+import { test } from 'vitest';
 import sharp from 'sharp';
+import { exec} from 'child_process';
 import { HeatTreatedClassifier } from '../algorithm/classifier-heat-treated';
 import { ColorType } from '../algorithm/color-type';
 import { CaseHardenedClassifier } from '../algorithm/classifier-case-hardened';
 import { BaseClassifier } from '../algorithm/classifier-base';
 
-test('sample', async () => {
+test('masking', async () => {
   const ht = new HeatTreatedClassifier();
   const ch = new CaseHardenedClassifier();
 
@@ -19,9 +20,24 @@ test('sample', async () => {
     convertToMaskedImage(ch, 'gen/tests/images/case_hardened_purple_ak47_571.png'),
   ]);
 
-  expect(true).toBe(true);
+  const diff = new Promise<void>((resolve, reject) => {
+    const process = exec('git diff --name-only --exit-code gen/tests/images');
 
-  // todo: use git diff to ensure the image is correct`
+    let log = '';
+    process.stdout?.on('data', (data) => {
+      log += data.toString();
+    });
+
+    process.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error('Masked images differ. Please commit the files if the results are acceptable.\n' + log));
+      }
+    });
+  });
+
+  await diff;
 });
 
 async function convertToMaskedImage(
