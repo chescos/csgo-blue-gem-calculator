@@ -8,7 +8,7 @@ export default defineConfig({
       name: 'BlueGemCalculator',
       fileName: 'blue-gem-calculator',
     },
-    outDir: '../dist',
+    outDir: './dist',
     emptyOutDir: true,
   },
 });
