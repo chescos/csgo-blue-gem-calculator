@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import sharp from 'sharp';
-import { exec} from 'child_process';
+import { exec } from 'child_process';
 import { HeatTreatedClassifier } from '../algorithm/classifier-heat-treated';
 import { ColorType } from '../algorithm/color-type';
 import { CaseHardenedClassifier } from '../algorithm/classifier-case-hardened';
