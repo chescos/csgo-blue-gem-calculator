@@ -182,8 +182,18 @@ export class BlueGemGenerator {
 
       if (itemKey === 'ak47') {
         regionsImages = [
-          ['top', 'frontview', FullImage],
-          ['magazine',
+          [
+            'top',
+            'playside',
+            {
+              x: 0.5034703683929524,
+              y: 0.05380333951762523,
+              width: 0.21462893753336892,
+              height: 0.09461966604823747
+            },
+          ], // + frontview?
+          [
+            'magazine',
             'playside',
             { x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218 },
           ],
