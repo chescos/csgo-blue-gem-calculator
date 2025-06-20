@@ -45,6 +45,14 @@ test('Specific rank test', () => {
   }> = [
     // These are off so far: AK-47, MAC-10, Nomad Knife, Shadow Daggers, Navaja Knife.
     {
+      item: 'AK-47',
+      finish: 'Case Hardened',
+      region: 'top',
+      color: 'blue',
+      rank: 0,
+      seed: 661,
+    },
+    {
       item: 'Desert Eagle',
       finish: 'Heat Treated',
       region: 'playside',
@@ -235,6 +243,11 @@ test('Specific rank test', () => {
 
     result.percentages.sort((a, b) => b[entry.region]![entry.color] - a[entry.region]![entry.color]);
 
-    expect(result.percentages[entry.rank]!.seed).toBe(entry.seed);
+    const resultSeed = result.percentages[entry.rank]!.seed;
+
+    expect(
+      resultSeed,
+      `Expected ${entry.item} with seed ${entry.seed} to have rank ${entry.rank}, but ${resultSeed} has it instead`,
+    ).toBe(entry.seed);
   });
 });
