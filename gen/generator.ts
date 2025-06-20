@@ -14,7 +14,7 @@ export type SubRegion = {
   y: number;
   width: number;
   height: number;
-}
+};
 
 export const FullImage: SubRegion = { x: 0, y: 0, width: 1, height: 1 };
 
@@ -113,7 +113,11 @@ export class BlueGemGenerator {
     }
   }
 
-  static async calculateBlueGemPercentagesForImage(imagePath: string, imageRegion: SubRegion, finishKey: FinishKey): Promise<PercentageNumbers> {
+  static async calculateBlueGemPercentagesForImage(
+    imagePath: string,
+    imageRegion: SubRegion,
+    finishKey: FinishKey,
+  ): Promise<PercentageNumbers> {
     //const startTime = Date.now();
     const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
@@ -218,7 +222,11 @@ export class BlueGemGenerator {
 
       const imagePath = `./images/${imageName}`;
 
-      const result = await BlueGemGenerator.calculateBlueGemPercentagesForImage(imagePath, queueItem.imageRegion, queueItem.finishKey);
+      const result = await BlueGemGenerator.calculateBlueGemPercentagesForImage(
+        imagePath,
+        queueItem.imageRegion,
+        queueItem.finishKey,
+      );
 
       this.results.push({
         ...queueItem,
