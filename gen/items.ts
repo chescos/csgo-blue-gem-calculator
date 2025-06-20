@@ -5,11 +5,12 @@ export type PercentageNumbers = {
   other: number;
 };
 
+export type CommonRegions = 'playside' | 'backside';
+export type AK47Regions = 'top' | 'magazine';
+export type Region = CommonRegions | AK47Regions;
+
 export type FinishKey = 'ch' | 'ht';
-
 export type FinishName = 'Case Hardened' | 'Heat Treated';
-
-export type ImagePose = 'playside' | 'backside' | 'frontview';
 
 export type ItemName =
   | 'AK-47'
@@ -63,23 +64,40 @@ export type ItemKey =
   | 'talon'
   | 'ursus';
 
-export type Item = {
+export type ImagePose = 'playside' | 'backside' | 'frontview';
+
+export class Item {
   name: ItemName;
   types: FinishKey[];
+  regions: Region[];
   images: ImagePose[];
-};
+
+  constructor(name: ItemName, types: FinishKey[], regions: Region[], images?: ImagePose[]) {
+    this.name = name;
+    this.types = types;
+    this.regions = regions;
+
+    this.images = images || [];
+
+    if (!images) {
+      const standardRegions = ['playside', 'backside'] as Region[];
+
+      for (const region of regions) {
+        if (!standardRegions.includes(region)) {
+          this.images.push(region as ImagePose);
+        }
+      }
+    }
+  }
+}
 
 export const items: Record<ItemKey, Item> = {
-  ak47: {
-    name: 'AK-47',
-    types: ['ch'],
-    images: ['playside', 'frontview'],
-  },
-/*
+  ak47: new Item('AK-47', ['ch'], ['top', 'magazine'], ['playside', 'frontview']),
+  /*
   bayonet: {
     name: 'Bayonet',
     types: ['ch'],
-    images: ['playside', 'backside'],
+    regions: ['playside', 'backside'],
   },
   bowie: {
     name: 'Bowie Knife',

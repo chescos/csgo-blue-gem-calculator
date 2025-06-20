@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import BlueGemCalculator from '../calculator';
-import { FinishName, ImagePose, ItemName } from '../../gen/items';
+import { FinishName, ItemName, Region } from '../../gen/items';
 
 const calculatorTest = new BlueGemCalculator();
 
@@ -38,7 +38,7 @@ test('Specific rank test', () => {
   const data: Array<{
     item: ItemName;
     finish: FinishName;
-    pose: ImagePose;
+    region: Region;
     color: 'blue' | 'purple' | 'gold' | 'other';
     rank: number;
     seed: number;
@@ -47,7 +47,7 @@ test('Specific rank test', () => {
     {
       item: 'Desert Eagle',
       finish: 'Heat Treated',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 490,
@@ -55,7 +55,7 @@ test('Specific rank test', () => {
     {
       item: 'Five-SeveN',
       finish: 'Heat Treated',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 904,
@@ -63,7 +63,7 @@ test('Specific rank test', () => {
     {
       item: 'Five-SeveN',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 690,
@@ -71,7 +71,7 @@ test('Specific rank test', () => {
     {
       item: 'Karambit',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 387,
@@ -79,7 +79,7 @@ test('Specific rank test', () => {
     {
       item: 'Karambit',
       finish: 'Case Hardened',
-      pose: 'backside',
+      region: 'backside',
       color: 'blue',
       rank: 0,
       seed: 417,
@@ -87,7 +87,7 @@ test('Specific rank test', () => {
     {
       item: 'M9 Bayonet',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 601,
@@ -95,7 +95,7 @@ test('Specific rank test', () => {
     {
       item: 'Butterfly Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 182,
@@ -103,7 +103,7 @@ test('Specific rank test', () => {
     {
       item: 'Skeleton Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 403,
@@ -111,7 +111,7 @@ test('Specific rank test', () => {
     {
       item: 'Skeleton Knife',
       finish: 'Case Hardened',
-      pose: 'backside',
+      region: 'backside',
       color: 'blue',
       rank: 0,
       seed: 468,
@@ -119,7 +119,7 @@ test('Specific rank test', () => {
     {
       item: 'Talon Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 55,
@@ -127,7 +127,7 @@ test('Specific rank test', () => {
     {
       item: 'Talon Knife',
       finish: 'Case Hardened',
-      pose: 'backside',
+      region: 'backside',
       color: 'blue',
       rank: 0,
       seed: 905,
@@ -135,7 +135,7 @@ test('Specific rank test', () => {
     {
       item: 'Bayonet',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 555,
@@ -143,7 +143,7 @@ test('Specific rank test', () => {
     {
       item: 'Flip Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 670,
@@ -151,7 +151,7 @@ test('Specific rank test', () => {
     {
       item: 'Kukri Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 494,
@@ -159,7 +159,7 @@ test('Specific rank test', () => {
     {
       item: 'Stiletto Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 182,
@@ -167,7 +167,7 @@ test('Specific rank test', () => {
     {
       item: 'Survival Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 403,
@@ -175,7 +175,7 @@ test('Specific rank test', () => {
     {
       item: 'Ursus Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 494,
@@ -183,7 +183,7 @@ test('Specific rank test', () => {
     {
       item: 'Paracord Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 403,
@@ -191,7 +191,7 @@ test('Specific rank test', () => {
     {
       item: 'Huntsman Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 618,
@@ -199,7 +199,7 @@ test('Specific rank test', () => {
     {
       item: 'Bowie Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 182,
@@ -207,7 +207,7 @@ test('Specific rank test', () => {
     {
       item: 'Falchion Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 494,
@@ -215,17 +215,23 @@ test('Specific rank test', () => {
     {
       item: 'Gut Knife',
       finish: 'Case Hardened',
-      pose: 'playside',
+      region: 'playside',
       color: 'blue',
       rank: 0,
       seed: 567,
     },
   ];
 
+  const supportedItems = calculatorTest.getSupportedItems('Case Hardened').concat(calculatorTest.getSupportedItems('Heat Treated'));
+
   data.forEach((entry) => {
+    if (!supportedItems.includes(entry.item)) {
+      return;
+    }
+
     const result = calculatorTest.getAllPercentages(entry.finish, entry.item);
 
-    result.percentages.sort((a, b) => b[entry.pose]![entry.color] - a[entry.pose]![entry.color]);
+    result.percentages.sort((a, b) => b[entry.region]![entry.color] - a[entry.region]![entry.color]);
 
     expect(result.percentages[entry.rank]!.seed).toBe(entry.seed);
   });

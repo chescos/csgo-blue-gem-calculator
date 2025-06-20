@@ -2,7 +2,7 @@ import { readdir, readFile, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
-import { items, ItemKey, FinishKey, ImagePose, PercentageNumbers } from './items';
+import { items, ItemKey, FinishKey, ImagePose, PercentageNumbers, Region } from './items';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Downloader from './downloader';
@@ -24,6 +24,7 @@ type QueueItem = {
   seed: number;
   imagePose: ImagePose;
   imageRegion: SubRegion;
+  outputRegion: Region
 };
 
 type ResultItem = QueueItem & {
@@ -177,17 +178,20 @@ export class BlueGemGenerator {
       }
 
       // For most items, we just analyze the full playside and backside images.
-      let imagesRegions = item.images.map((pose) => [pose, FullImage] as const);
+      let regionsImages = item.images.map((pose) => [pose as Region, pose, FullImage] as const);
 
       if (itemKey === 'ak47') {
-        imagesRegions = [
-          ['frontview', FullImage], // top
-          ['playside', {x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218}], // magazine
+        regionsImages = [
+          ['top', 'frontview', FullImage],
+          ['magazine',
+            'playside',
+            { x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218 },
+          ],
         ];
       }
 
       item.types.forEach((finishKey): void => {
-        imagesRegions.forEach(([pose, region]): void => {
+        regionsImages.forEach(([region, imagePose, imageRegion]): void => {
           for (let seed = 0; seed <= 1000; seed++) {
             if (this.patternFilter && this.patternFilter !== seed) {
               continue;
@@ -196,9 +200,10 @@ export class BlueGemGenerator {
             this.queue.push({
               itemKey,
               finishKey,
-              imagePose: pose,
+              imagePose,
               seed,
-              imageRegion: region,
+              imageRegion,
+              outputRegion: region,
             });
           }
         });
@@ -263,18 +268,18 @@ export class BlueGemGenerator {
     const existingResult = JSON.parse((await readFile(jsonPath, 'utf-8')) || '{}') as ResultFormat;
 
     const grouped = this.results.reduce((acc, item) => {
-      const { itemKey, finishKey, imagePose, seed, result } = item;
+      const { itemKey, finishKey, seed, outputRegion, result } = item;
 
       if (!acc[itemKey]) acc[itemKey] = {};
       if (!acc[itemKey][finishKey]) acc[itemKey][finishKey] = {};
-      if (!acc[itemKey][finishKey][imagePose]) acc[itemKey][finishKey][imagePose] = [];
+      if (!acc[itemKey][finishKey][outputRegion]) acc[itemKey][finishKey][outputRegion] = [];
 
       const index = seed * 4;
 
-      acc[itemKey][finishKey][imagePose][index] = result.blue;
-      acc[itemKey][finishKey][imagePose][index + 1] = result.purple;
-      acc[itemKey][finishKey][imagePose][index + 2] = result.gold;
-      acc[itemKey][finishKey][imagePose][index + 3] = result.other;
+      acc[itemKey][finishKey][outputRegion][index] = result.blue;
+      acc[itemKey][finishKey][outputRegion][index + 1] = result.purple;
+      acc[itemKey][finishKey][outputRegion][index + 2] = result.gold;
+      acc[itemKey][finishKey][outputRegion][index + 3] = result.other;
 
       return acc;
     }, existingResult);

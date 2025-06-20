@@ -43,7 +43,7 @@ export default {
       data,
       activeItem: 'AK-47',
       activeFinish: 'Case Hardened',
-      activePose: 'playside',
+      activeRegion: 'top',
       activeIndex: 0,
       activeOrder: 'blue',
       activeSort: 'desc',
@@ -74,7 +74,7 @@ export default {
 
     activeItem() {
       this.syncActiveFinish();
-      this.syncActivePose();
+      this.syncActiveRegion();
       this.syncActiveIndex();
       this.syncSortOrder();
       this.syncSeedInput();
@@ -82,14 +82,14 @@ export default {
     },
 
     activeFinish() {
-      this.syncActivePose();
+      this.syncActiveRegion();
       this.syncActiveIndex();
       this.syncSortOrder();
       this.syncSeedInput();
       this.syncScreenshotUrl();
     },
 
-    activePose() {
+    activeRegion() {
       this.syncActiveIndex();
       this.syncSortOrder();
       this.syncSeedInput();
@@ -133,7 +133,7 @@ export default {
     },
 
     syncSortOrder() {
-      this.data[this.activeItem][this.activeFinish][this.activePose].sort((a, b) =>
+      this.data[this.activeItem][this.activeFinish][this.activeRegion].sort((a, b) =>
         this.activeSort === 'asc'
           ? a[this.activeOrder] - b[this.activeOrder]
           : b[this.activeOrder] - a[this.activeOrder],
@@ -141,7 +141,7 @@ export default {
     },
 
     syncScreenshotUrl() {
-      const selectedSeed = this.data[this.activeItem][this.activeFinish][this.activePose][this.activeIndex];
+      const selectedSeed = this.data[this.activeItem][this.activeFinish][this.activeRegion][this.activeIndex];
       const itemKey = calculator.itemNameToKey(this.activeItem);
       const finishKey = calculator.finishNameToKey(this.activeFinish);
 
@@ -150,7 +150,7 @@ export default {
 
       if (this.activeImages) {
         baseUrl = 'https://cdn.csgoskins.gg/public/images/gems/v2/poses/';
-        fileName = `${itemKey}_${finishKey}_${this.activePose}_${selectedSeed.seed}.avif`;
+        fileName = `${itemKey}_${finishKey}_${this.activeRegion}_${selectedSeed.seed}.avif`;
       } else {
         baseUrl = 'https://cdn.csgoskins.gg/public/images/gems/v2/screenshots/';
         fileName = `${itemKey}_${finishKey}_playside_${selectedSeed.seed}.avif`;
@@ -163,8 +163,8 @@ export default {
       this.activeFinish = this.data[this.activeItem]['Case Hardened'] ? 'Case Hardened' : 'Heat Treated';
     },
 
-    syncActivePose() {
-      this.activePose = 'playside';
+    syncActiveRegion() {
+      this.activeRegion = 'playside';
     },
 
     syncActiveIndex() {
@@ -172,7 +172,7 @@ export default {
     },
 
     syncSeedInput() {
-      this.seedInput = String(this.data[this.activeItem][this.activeFinish][this.activePose][this.activeIndex].seed);
+      this.seedInput = String(this.data[this.activeItem][this.activeFinish][this.activeRegion][this.activeIndex].seed);
     },
 
     titleCase(str) {
@@ -185,7 +185,7 @@ export default {
     onSeedInputChange() {
       const newSeed = String(this.seedInput);
 
-      const index = this.data[this.activeItem][this.activeFinish][this.activePose].findIndex(
+      const index = this.data[this.activeItem][this.activeFinish][this.activeRegion].findIndex(
         (s) => String(s.seed) === newSeed,
       );
 
@@ -268,13 +268,13 @@ export default {
             d="M149.1 64.8L138.7 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-74.7 0L362.9 64.8C356.4 45.2 338.1 32 317.4 32L194.6 32c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"
           />
         </svg>
-        <span>Pose</span>
+        <span>Region</span>
       </label>
       <div class="relative mt-3">
         <select
           id="pose"
           class="appearance-none rounded p-3 pr-10 bg-gray-700 text-white leading-tight focus:outline-none focus:shadow-outline"
-          v-model="activePose"
+          v-model="activeRegion"
         >
           <option v-for="(value, key) in data[activeItem][activeFinish]" :value="key">
             {{ titleCase(key) }}
@@ -459,7 +459,7 @@ export default {
           class="p-4"
           :class="{ 'text-white': value === activeOrder }"
         >
-          {{ data[activeItem][activeFinish][activePose][activeIndex][value].toFixed(2) }}%
+          {{ data[activeItem][activeFinish][activeRegion][activeIndex][value].toFixed(2) }}%
         </td>
       </tr>
     </tbody>

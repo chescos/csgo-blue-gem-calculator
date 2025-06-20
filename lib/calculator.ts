@@ -1,11 +1,13 @@
 import json from './../gen/result.json';
-import { PercentageNumbers, ImagePose, ItemName, ItemKey, FinishName, FinishKey, finishes, items } from '../gen/items';
+import { PercentageNumbers, ItemName, ItemKey, FinishName, FinishKey, finishes, items } from '../gen/items';
 
-type OptionalPoses = Exclude<ImagePose, 'playside'>;
+type StandardPoses = 'playside' | 'backside';
+type AK47Poses = 'top' | 'magazine';
 
-interface PercentageResult extends Partial<Record<OptionalPoses, PercentageNumbers>> {
+type AllPoses = StandardPoses | AK47Poses;
+
+interface PercentageResult extends Partial<Record<AllPoses, PercentageNumbers>> {
   seed: number;
-  playside: PercentageNumbers;
 }
 
 interface PercentageResults {
@@ -39,7 +41,7 @@ class BlueGemCalculator {
     };
   }
 
-  getPercentages(finishName: FinishName, itemName: ItemName, seed: number): PercentageResult {
+getPercentages(finishName: FinishName, itemName: ItemName, seed: number): PercentageResult {
     const finishKey = this.finishNameToKey(finishName);
     const itemKey = this.itemNameToKey(itemName);
 
@@ -49,16 +51,16 @@ class BlueGemCalculator {
 
     const index = seed * 4;
 
-    items[itemKey].images.forEach((imagePose) => {
-      result[imagePose] = {
+    items[itemKey].regions.forEach((region) => {
+      result[region] = {
         // @ts-expect-error TODO: Fix later
-        blue: json[itemKey][finishKey][imagePose][index],
+        blue: json[itemKey][finishKey][region][index],
         // @ts-expect-error TODO: Fix later
-        purple: json[itemKey][finishKey][imagePose][index + 1],
+        purple: json[itemKey][finishKey][region][index + 1],
         // @ts-expect-error TODO: Fix later
-        gold: json[itemKey][finishKey][imagePose][index + 2],
+        gold: json[itemKey][finishKey][region][index + 2],
         // @ts-expect-error TODO: Fix later
-        other: json[itemKey][finishKey][imagePose][index + 3],
+        other: json[itemKey][finishKey][region][index + 3],
       };
     });
 
