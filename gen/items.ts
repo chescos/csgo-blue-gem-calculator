@@ -72,17 +72,17 @@ export class Item {
   regions: Region[];
   images: ImagePose[];
 
-  constructor(name: ItemName, types: FinishKey[], regions: Region[], images?: ImagePose[]) {
+  constructor(name: ItemName, types: FinishKey[], regions?: Region[], images?: ImagePose[]) {
     this.name = name;
     this.types = types;
-    this.regions = regions;
+    this.regions = regions || ['playside', 'backside'];
 
     this.images = images || [];
 
     if (!images) {
       const standardRegions = ['playside', 'backside'] as Region[];
 
-      for (const region of regions) {
+      for (const region of this.regions) {
         if (!standardRegions.includes(region)) {
           this.images.push(region as ImagePose);
         }
@@ -93,123 +93,29 @@ export class Item {
 
 export const items: Record<ItemKey, Item> = {
   ak47: new Item('AK-47', ['ch'], ['top', 'magazine'], ['playside', 'frontview']),
-  /*
-  bayonet: {
-    name: 'Bayonet',
-    types: ['ch'],
-    regions: ['playside', 'backside'],
-  },
-  bowie: {
-    name: 'Bowie Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  butterfly: {
-    name: 'Butterfly Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  classic: {
-    name: 'Classic Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  deagle: {
-    name: 'Desert Eagle',
-    types: ['ht'],
-    images: ['playside'],
-  },
-  falchion: {
-    name: 'Falchion Knife',
-    types: ['ch'],
-    images: ['playside'],
-  },
-  fiveseven: {
-    name: 'Five-SeveN',
-    types: ['ch', 'ht'],
-    images: ['playside'],
-  },
-  flip: {
-    name: 'Flip Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  gut: {
-    name: 'Gut Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  huntsman: {
-    name: 'Huntsman Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  karambit: {
-    name: 'Karambit',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  kukri: {
-    name: 'Kukri Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  m9_bayonet: {
-    name: 'M9 Bayonet',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  mac10: {
-    name: 'MAC-10',
-    types: ['ch'],
-    images: ['playside'],
-  },
-  navaja: {
-    name: 'Navaja Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  nomad: {
-    name: 'Nomad Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  paracord: {
-    name: 'Paracord Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  shadow: {
-    name: 'Shadow Daggers',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  skeleton: {
-    name: 'Skeleton Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  stiletto: {
-    name: 'Stiletto Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  survival: {
-    name: 'Survival Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  talon: {
-    name: 'Talon Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-  ursus: {
-    name: 'Ursus Knife',
-    types: ['ch'],
-    images: ['playside', 'backside'],
-  },
-*/
+  bayonet: new Item('Bayonet', ['ch']),
+  bowie: new Item('Bowie Knife', ['ch']),
+  butterfly: new Item('Butterfly Knife', ['ch']),
+  classic: new Item('Classic Knife', ['ch']),
+  deagle: new Item('Desert Eagle', ['ht'], ['playside']),
+  falchion: new Item('Falchion Knife', ['ch'], ['playside']),
+  fiveseven: new Item('Five-SeveN', ['ch', 'ht'], ['playside']),
+  flip: new Item('Flip Knife', ['ch']),
+  gut: new Item('Gut Knife', ['ch']),
+  huntsman: new Item('Huntsman Knife', ['ch']),
+  karambit: new Item('Karambit', ['ch']),
+  kukri: new Item('Kukri Knife', ['ch']),
+  m9_bayonet: new Item('M9 Bayonet', ['ch']),
+  mac10: new Item('MAC-10', ['ch'], ['playside']),
+  navaja: new Item('Navaja Knife', ['ch']),
+  nomad: new Item('Nomad Knife', ['ch']),
+  paracord: new Item('Paracord Knife', ['ch']),
+  shadow: new Item('Shadow Daggers', ['ch']),
+  skeleton: new Item('Skeleton Knife', ['ch']),
+  stiletto: new Item('Stiletto Knife', ['ch']),
+  survival: new Item('Survival Knife', ['ch']),
+  talon: new Item('Talon Knife', ['ch']),
+  ursus: new Item('Ursus Knife', ['ch']),
 };
 
 export const finishes: Record<FinishKey, FinishName> = {
