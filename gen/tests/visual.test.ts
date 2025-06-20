@@ -18,6 +18,7 @@ test('masking', async () => {
     convertToMaskedImage(ch, 'gen/tests/images/case_hardened_gold_bayonet_395.png'),
     convertToMaskedImage(ch, 'gen/tests/images/case_hardened_blue_ak47_661.png'),
     convertToMaskedImage(ch, 'gen/tests/images/case_hardened_purple_ak47_571.png'),
+    convertToMaskedImage(ch, 'gen/tests/images/ak47_ch_playside_661.avif'),
   ]);
 
   const diff = new Promise<void>((resolve, reject) => {
@@ -76,7 +77,7 @@ async function convertToMaskedImage(
     }
   }
 
-  outputPath ??= imagePath.replace('.png', '.masked.png');
+  outputPath ??= imagePath.replace('.', '.masked.');
 
   await sharp(Buffer.from(data), {
     raw: {
