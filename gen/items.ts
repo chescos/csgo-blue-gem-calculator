@@ -75,6 +75,7 @@ export const items: Record<ItemKey, Item> = {
     types: ['ch'],
     images: ['playside', 'frontview'],
   },
+/*
   bayonet: {
     name: 'Bayonet',
     types: ['ch'],
@@ -190,6 +191,7 @@ export const items: Record<ItemKey, Item> = {
     types: ['ch'],
     images: ['playside', 'backside'],
   },
+*/
 };
 
 export const finishes: Record<FinishKey, FinishName> = {

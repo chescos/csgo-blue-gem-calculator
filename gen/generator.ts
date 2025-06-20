@@ -176,8 +176,18 @@ export class BlueGemGenerator {
         continue;
       }
 
+      // For most items, we just analyze the full playside and backside images.
+      let imagesRegions = item.images.map((pose) => [pose, FullImage] as const);
+
+      if (itemKey === 'ak47') {
+        imagesRegions = [
+          ['frontview', FullImage], // top
+          ['playside', {x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218}], // magazine
+        ];
+      }
+
       item.types.forEach((finishKey): void => {
-        item.images.forEach((imagePose): void => {
+        imagesRegions.forEach(([pose, region]): void => {
           for (let seed = 0; seed <= 1000; seed++) {
             if (this.patternFilter && this.patternFilter !== seed) {
               continue;
@@ -186,9 +196,9 @@ export class BlueGemGenerator {
             this.queue.push({
               itemKey,
               finishKey,
-              imagePose,
+              imagePose: pose,
               seed,
-              imageRegion: FullImage,
+              imageRegion: region,
             });
           }
         });
