@@ -24,7 +24,7 @@ type QueueItem = {
   seed: number;
   imagePose: ImagePose;
   imageRegion: SubRegion;
-  outputRegion: Region
+  outputRegion: Region;
 };
 
 type ResultItem = QueueItem & {
@@ -189,7 +189,7 @@ export class BlueGemGenerator {
               x: 0.5034703683929524,
               y: 0.05380333951762523,
               width: 0.21462893753336892,
-              height: 0.09461966604823747
+              height: 0.09461966604823747,
             },
           ], // + frontview?
           [

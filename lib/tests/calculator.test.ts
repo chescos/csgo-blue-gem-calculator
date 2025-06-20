@@ -222,7 +222,9 @@ test('Specific rank test', () => {
     },
   ];
 
-  const supportedItems = calculatorTest.getSupportedItems('Case Hardened').concat(calculatorTest.getSupportedItems('Heat Treated'));
+  const supportedItems = calculatorTest
+    .getSupportedItems('Case Hardened')
+    .concat(calculatorTest.getSupportedItems('Heat Treated'));
 
   data.forEach((entry) => {
     if (!supportedItems.includes(entry.item)) {

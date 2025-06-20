@@ -41,7 +41,7 @@ class BlueGemCalculator {
     };
   }
 
-getPercentages(finishName: FinishName, itemName: ItemName, seed: number): PercentageResult {
+  getPercentages(finishName: FinishName, itemName: ItemName, seed: number): PercentageResult {
     const finishKey = this.finishNameToKey(finishName);
     const itemKey = this.itemNameToKey(itemName);
 
