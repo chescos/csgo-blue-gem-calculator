@@ -9,11 +9,21 @@ import Downloader from './downloader';
 import path from 'path';
 import { CaseHardenedClassifier } from './algorithm/classifier-case-hardened';
 
+type SubRegion = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+const FullImage: SubRegion = { x: 0, y: 0, width: 1, height: 1 };
+
 type QueueItem = {
   itemKey: ItemKey;
   finishKey: FinishKey;
-  imagePose: ImagePose;
   seed: number;
+  imagePose: ImagePose;
+  imageRegion: SubRegion;
 };
 
 type ResultItem = QueueItem & {
@@ -103,26 +113,35 @@ export class BlueGemGenerator {
     }
   }
 
-  async calculateBlueGemPercentagesForImage(imagePath: string, finishKey: FinishKey): Promise<PercentageNumbers> {
+  async calculateBlueGemPercentagesForImage(imagePath: string, imageRegion: SubRegion, finishKey: FinishKey): Promise<PercentageNumbers> {
     //const startTime = Date.now();
-    const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
+    const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
     const classifier = finishKey === 'ht' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
 
     const count = [0, 0, 0, 0];
     let totalCount = 0;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const a = data[i + 3];
-      if (a == 0) {
-        continue;
+    const minWidth = info.width * imageRegion.x;
+    const minHeight = info.height * imageRegion.y;
+    const maxWidth = minWidth + info.width * imageRegion.width;
+    const maxHeight = minHeight + info.height * imageRegion.height;
+
+    for (let y = minHeight; y < maxHeight; y++) {
+      for (let x = minWidth; x < maxWidth; x++) {
+        const i = (y * info.width + x) * 4; // 4 bytes per pixel (RGBA)
+
+        const a = data[i + 3];
+        if (a == 0) {
+          continue;
+        }
+
+        const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
+        const colorType = classifier.getColorType(r, g, b);
+
+        count[colorType]!++;
+        totalCount++;
       }
-
-      const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
-      const colorType = classifier.getColorType(r, g, b);
-
-      count[colorType]!++;
-      totalCount++;
     }
 
     //const totalTime = (Date.now() - startTime) / 1000;
@@ -165,6 +184,7 @@ export class BlueGemGenerator {
               finishKey,
               imagePose,
               seed,
+              imageRegion: FullImage,
             });
           }
         });
@@ -198,7 +218,7 @@ export class BlueGemGenerator {
 
       const imagePath = `./images/${imageName}`;
 
-      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.finishKey);
+      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.imageRegion, queueItem.finishKey);
 
       this.results.push({
         ...queueItem,
