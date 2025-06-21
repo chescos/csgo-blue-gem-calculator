@@ -28,7 +28,7 @@
     "lint": "eslint . --fix",
     "prettify": "prettier --write . && git diff --exit-code",
     "test": "vitest run",
-    "gen": "tsx ./gen/generator.ts",
+    "gen": "tsx ./gen/generator.ts --generate",
     "prepare": "npm run build"
   },
   "repository": {

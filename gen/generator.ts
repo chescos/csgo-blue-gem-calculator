@@ -225,8 +225,10 @@ export class BlueGemGenerator {
   }
 }
 
-const generator = new BlueGemGenerator();
+if (process.argv[2] === '--generate') {
+  const generator = new BlueGemGenerator();
 
-await generator.download();
-await generator.run();
-await generator.storeResult();
+  await generator.download();
+  await generator.run();
+  await generator.storeResult();
+}
