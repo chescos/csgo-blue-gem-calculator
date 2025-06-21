@@ -241,7 +241,61 @@ export class BlueGemGenerator {
       return acc;
     }, existingResult);
 
-    await writeFile(jsonPath, JSON.stringify(grouped));
+    let stringifiedJson = '';
+    let indent = 0;
+    const addLine = (line: string, addComma = false) =>
+      (stringifiedJson += '\t'.repeat(indent) + line + (addComma ? ',' : '') + '\n');
+
+    addLine('{');
+    indent++;
+
+    const groupEntries = Object.entries(grouped);
+    let g = 0;
+
+    for (const [itemKey, itemData] of groupEntries) {
+      addLine(`"${itemKey}": {`);
+      indent++;
+      g++;
+
+      const finishEntries = Object.entries(itemData);
+      let f = 0;
+
+      for (const [finishKey, finishData] of finishEntries) {
+        addLine(`"${finishKey}": {`);
+        indent++;
+        f++;
+
+        const regionEntries = Object.entries(finishData);
+        let r = 0;
+        for (const [region, percentages] of regionEntries) {
+          addLine(`"${region}": [`);
+          indent++;
+          r++;
+
+          for (let seed = 0; seed <= 1000; seed++) {
+            const index = seed * 4;
+            addLine(
+              `${percentages[index]}, ${percentages[index + 1]}, ${percentages[index + 2]}, ${percentages[index + 3]}`,
+              seed < 1000,
+            );
+          }
+
+          addLine(']', r < regionEntries.length);
+          indent--;
+        }
+
+        addLine('}', f < finishEntries.length);
+        indent--;
+      }
+
+      addLine('}', g < groupEntries.length);
+      indent--;
+    }
+
+    addLine('}');
+    indent--;
+
+    await writeFile(jsonPath, stringifiedJson, 'utf-8');
   }
 }
 
