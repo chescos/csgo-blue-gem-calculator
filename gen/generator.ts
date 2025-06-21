@@ -1,4 +1,4 @@
-import { readdir, writeFile } from 'fs/promises';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
@@ -33,8 +33,15 @@ export class BlueGemGenerator {
   queue: QueueItem[] = [];
   results: ResultItem[] = [];
 
-  constructor() {
+  itemFilter: ItemKey | undefined;
+  patternFilter: number | undefined;
+
+  constructor(itemFilter?: ItemKey, patternFilter?: string) {
     this.dirname = dirname(fileURLToPath(import.meta.url));
+    this.itemFilter = itemFilter;
+    if (patternFilter) {
+      this.patternFilter = parseInt(patternFilter, 10);
+    }
   }
 
   public static constructImageFileNameForTypeAndSeed(
@@ -142,9 +149,17 @@ export class BlueGemGenerator {
     for (const itemKey of Object.keys(items) as ItemKey[]) {
       const item = items[itemKey];
 
+      if (this.itemFilter && this.itemFilter !== itemKey) {
+        continue;
+      }
+
       item.types.forEach((finishKey): void => {
         item.images.forEach((imagePose): void => {
           for (let seed = 0; seed <= 1000; seed++) {
+            if (this.patternFilter && this.patternFilter !== seed) {
+              continue;
+            }
+
             this.queue.push({
               itemKey,
               finishKey,
@@ -204,6 +219,11 @@ export class BlueGemGenerator {
   async storeResult() {
     // TODO: We either need to compress the data a lot for out NPM package, or fetch it from a URL,
     //  so that the NPM package does not get too large.
+
+    const jsonPath = path.join(this.dirname, '/', 'result.json');
+
+    const existingResult = JSON.parse((await readFile(jsonPath, 'utf-8')) || '{}') as ResultFormat;
+
     const grouped = this.results.reduce((acc, item) => {
       const { itemKey, finishKey, imagePose, seed, result } = item;
 
@@ -219,14 +239,70 @@ export class BlueGemGenerator {
       acc[itemKey][finishKey][imagePose][index + 3] = result.other;
 
       return acc;
-    }, {} as ResultFormat);
+    }, existingResult);
 
-    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(grouped));
+    let stringifiedJson = '';
+    let indent = 0;
+    const addLine = (line: string, addComma = false) =>
+      (stringifiedJson += '\t'.repeat(indent) + line + (addComma ? ',' : '') + '\n');
+
+    addLine('{');
+    indent++;
+
+    const groupEntries = Object.entries(grouped);
+    let g = 0;
+
+    for (const [itemKey, itemData] of groupEntries) {
+      addLine(`"${itemKey}": {`);
+      indent++;
+      g++;
+
+      const finishEntries = Object.entries(itemData);
+      let f = 0;
+
+      for (const [finishKey, finishData] of finishEntries) {
+        addLine(`"${finishKey}": {`);
+        indent++;
+        f++;
+
+        const regionEntries = Object.entries(finishData);
+        let r = 0;
+        for (const [region, percentages] of regionEntries) {
+          addLine(`"${region}": [`);
+          indent++;
+          r++;
+
+          for (let seed = 0; seed <= 1000; seed++) {
+            const index = seed * 4;
+            addLine(
+              `${percentages[index]}, ${percentages[index + 1]}, ${percentages[index + 2]}, ${percentages[index + 3]}`,
+              seed < 1000,
+            );
+          }
+
+          addLine(']', r < regionEntries.length);
+          indent--;
+        }
+
+        addLine('}', f < finishEntries.length);
+        indent--;
+      }
+
+      addLine('}', g < groupEntries.length);
+      indent--;
+    }
+
+    addLine('}');
+    indent--;
+
+    await writeFile(jsonPath, stringifiedJson, 'utf-8');
   }
 }
 
-const generator = new BlueGemGenerator();
+if (process.argv[2] === '--generate') {
+  const generator = new BlueGemGenerator(process.argv[3] as ItemKey, process.argv[4] as string);
 
-await generator.download();
-await generator.run();
-await generator.storeResult();
+  await generator.download();
+  await generator.run();
+  await generator.storeResult();
+}
