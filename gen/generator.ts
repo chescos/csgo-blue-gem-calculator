@@ -1,4 +1,4 @@
-import { readdir, writeFile } from 'fs/promises';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
@@ -204,6 +204,11 @@ export class BlueGemGenerator {
   async storeResult() {
     // TODO: We either need to compress the data a lot for out NPM package, or fetch it from a URL,
     //  so that the NPM package does not get too large.
+
+    const jsonPath = path.join(this.dirname, '/', 'result.json');
+
+    const existingResult = JSON.parse(await readFile(jsonPath, 'utf-8') || '{}') as ResultFormat;
+
     const grouped = this.results.reduce((acc, item) => {
       const { itemKey, finishKey, imagePose, seed, result } = item;
 
@@ -219,9 +224,9 @@ export class BlueGemGenerator {
       acc[itemKey][finishKey][imagePose][index + 3] = result.other;
 
       return acc;
-    }, {} as ResultFormat);
+    }, existingResult);
 
-    await writeFile(path.join(this.dirname, '/', 'result.json'), JSON.stringify(grouped));
+    await writeFile(jsonPath, JSON.stringify(grouped));
   }
 }
 
