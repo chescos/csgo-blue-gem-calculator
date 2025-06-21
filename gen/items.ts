@@ -83,7 +83,7 @@ export class Item {
       const standardRegions = ['playside', 'backside'] as Region[];
 
       for (const region of this.regions) {
-        if (!standardRegions.includes(region)) {
+        if (standardRegions.includes(region)) {
           this.images.push(region as ImagePose);
         }
       }

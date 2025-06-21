@@ -127,10 +127,10 @@ export class BlueGemGenerator {
     const count = [0, 0, 0, 0];
     let totalCount = 0;
 
-    const minWidth = info.width * imageRegion.x;
-    const minHeight = info.height * imageRegion.y;
-    const maxWidth = minWidth + info.width * imageRegion.width;
-    const maxHeight = minHeight + info.height * imageRegion.height;
+    const minWidth = Math.max(0, Math.floor(info.width * imageRegion.x));
+    const minHeight = Math.max(0, Math.floor(info.height * imageRegion.y));
+    const maxWidth = Math.min(info.width, Math.floor(minWidth + info.width * imageRegion.width));
+    const maxHeight = Math.min(info.height, Math.floor(minHeight + info.height * imageRegion.height));
 
     for (let y = minHeight; y < maxHeight; y++) {
       for (let x = minWidth; x < maxWidth; x++) {
