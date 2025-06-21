@@ -45,13 +45,13 @@ export class BlueGemGenerator {
   results: ResultItem[] = [];
 
   itemFilter: ItemKey | undefined;
-  patternFilter: number | undefined;
+  patternFilter: number[] | undefined;
 
   constructor(itemFilter?: ItemKey, patternFilter?: string) {
     this.dirname = dirname(fileURLToPath(import.meta.url));
     this.itemFilter = itemFilter;
     if (patternFilter) {
-      this.patternFilter = parseInt(patternFilter, 10);
+      this.patternFilter = patternFilter.split(',').map((s) => parseInt(s, 10));
     }
   }
 
@@ -198,12 +198,17 @@ export class BlueGemGenerator {
             { x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218 },
           ],
         ];
+      } else if (itemKey === 'navaja') {
+        regionsImages = [
+          ['playside', 'playside', { x: 0.22, y: 0.0, width: 1.0, height: 1.0 }], // consider only the blade area
+          ['backside', 'backside', FullImage],
+        ];
       }
 
       item.types.forEach((finishKey): void => {
         regionsImages.forEach(([region, imagePose, imageRegion]): void => {
           for (let seed = 0; seed <= 1000; seed++) {
-            if (this.patternFilter && this.patternFilter !== seed) {
+            if (this.patternFilter && !this.patternFilter.includes(seed)) {
               continue;
             }
 

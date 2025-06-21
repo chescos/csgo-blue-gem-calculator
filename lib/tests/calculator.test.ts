@@ -43,7 +43,7 @@ test('Specific rank test', () => {
     rank: number;
     seed: number;
   }> = [
-    // These are off so far: AK-47, MAC-10, Nomad Knife, Shadow Daggers, Navaja Knife.
+    // These are off so far: MAC-10, Nomad Knife, Shadow Daggers.
     {
       item: 'AK-47',
       finish: 'Case Hardened',
@@ -51,6 +51,30 @@ test('Specific rank test', () => {
       color: 'blue',
       rank: 0,
       seed: 661,
+    },
+    {
+      item: 'Navaja Knife',
+      finish: 'Case Hardened',
+      region: 'playside',
+      color: 'blue',
+      rank: 0,
+      seed: 398,
+    },
+    {
+      item: 'Navaja Knife',
+      finish: 'Case Hardened',
+      region: 'playside',
+      color: 'blue',
+      rank: 1,
+      seed: 838,
+    },
+    {
+      item: 'Navaja Knife',
+      finish: 'Case Hardened',
+      region: 'playside',
+      color: 'blue',
+      rank: 2,
+      seed: 407,
     },
     {
       item: 'Desert Eagle',
