@@ -164,7 +164,7 @@ export default {
     },
 
     syncActiveRegion() {
-      this.activeRegion = 'playside';
+      this.activeRegion = Object.keys(this.data[this.activeItem][this.activeFinish])[0] || 'playside';
     },
 
     syncActiveIndex() {
