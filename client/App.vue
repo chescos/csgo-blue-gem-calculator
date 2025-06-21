@@ -153,7 +153,10 @@ export default {
         fileName = `${itemKey}_${finishKey}_${this.activeRegion}_${selectedSeed.seed}.avif`;
       } else {
         baseUrl = 'https://cdn.csgoskins.gg/public/images/gems/v2/screenshots/';
-        fileName = `${itemKey}_${finishKey}_playside_${selectedSeed.seed}.avif`;
+
+        const screenshotKey = this.activeRegion === 'backside' ? 'backside' : 'playside';
+
+        fileName = `${itemKey}_${finishKey}_${screenshotKey}_${selectedSeed.seed}.avif`;
       }
 
       this.screenshotUrl = `${baseUrl}${fileName}`;
