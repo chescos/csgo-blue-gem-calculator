@@ -2,18 +2,29 @@ import { readdir, readFile, writeFile } from 'fs/promises';
 import sharp from 'sharp';
 import { HeatTreatedClassifier } from './algorithm/classifier-heat-treated';
 import { ColorType } from './algorithm/color-type';
-import { items, ItemKey, FinishKey, ImagePose, PercentageNumbers } from './items';
+import { items, ItemKey, FinishKey, ImagePose, PercentageNumbers, Region } from './items';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Downloader from './downloader';
 import path from 'path';
 import { CaseHardenedClassifier } from './algorithm/classifier-case-hardened';
 
+export type SubRegion = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export const FullImage: SubRegion = { x: 0, y: 0, width: 1, height: 1 };
+
 type QueueItem = {
   itemKey: ItemKey;
   finishKey: FinishKey;
-  imagePose: ImagePose;
   seed: number;
+  imagePose: ImagePose;
+  imageRegion: SubRegion;
+  outputRegion: Region;
 };
 
 type ResultItem = QueueItem & {
@@ -103,26 +114,39 @@ export class BlueGemGenerator {
     }
   }
 
-  async calculateBlueGemPercentagesForImage(imagePath: string, finishKey: FinishKey): Promise<PercentageNumbers> {
+  static async calculateBlueGemPercentagesForImage(
+    imagePath: string,
+    imageRegion: SubRegion,
+    finishKey: FinishKey,
+  ): Promise<PercentageNumbers> {
     //const startTime = Date.now();
-    const { data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
+    const { info, data } = await sharp(imagePath).raw().toBuffer({ resolveWithObject: true });
 
     const classifier = finishKey === 'ht' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
 
     const count = [0, 0, 0, 0];
     let totalCount = 0;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const a = data[i + 3];
-      if (a == 0) {
-        continue;
+    const minWidth = Math.max(0, Math.floor(info.width * imageRegion.x));
+    const minHeight = Math.max(0, Math.floor(info.height * imageRegion.y));
+    const maxWidth = Math.min(info.width, Math.floor(minWidth + info.width * imageRegion.width));
+    const maxHeight = Math.min(info.height, Math.floor(minHeight + info.height * imageRegion.height));
+
+    for (let y = minHeight; y < maxHeight; y++) {
+      for (let x = minWidth; x < maxWidth; x++) {
+        const i = (y * info.width + x) * 4; // 4 bytes per pixel (RGBA)
+
+        const a = data[i + 3];
+        if (a == 0) {
+          continue;
+        }
+
+        const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
+        const colorType = classifier.getColorType(r, g, b);
+
+        count[colorType]!++;
+        totalCount++;
       }
-
-      const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
-      const colorType = classifier.getColorType(r, g, b);
-
-      count[colorType]!++;
-      totalCount++;
     }
 
     //const totalTime = (Date.now() - startTime) / 1000;
@@ -153,8 +177,31 @@ export class BlueGemGenerator {
         continue;
       }
 
+      // For most items, we just analyze the full playside and backside images.
+      let regionsImages = item.images.map((pose) => [pose as Region, pose, FullImage] as const);
+
+      if (itemKey === 'ak47') {
+        regionsImages = [
+          [
+            'top',
+            'playside',
+            {
+              x: 0.5034703683929524,
+              y: 0.05380333951762523,
+              width: 0.21462893753336892,
+              height: 0.09461966604823747,
+            },
+          ], // + frontview?
+          [
+            'magazine',
+            'playside',
+            { x: 0.401494927923118, y: 0.2541743970315399, width: 0.1596369460758142, height: 0.6790352504638218 },
+          ],
+        ];
+      }
+
       item.types.forEach((finishKey): void => {
-        item.images.forEach((imagePose): void => {
+        regionsImages.forEach(([region, imagePose, imageRegion]): void => {
           for (let seed = 0; seed <= 1000; seed++) {
             if (this.patternFilter && this.patternFilter !== seed) {
               continue;
@@ -165,6 +212,8 @@ export class BlueGemGenerator {
               finishKey,
               imagePose,
               seed,
+              imageRegion,
+              outputRegion: region,
             });
           }
         });
@@ -198,7 +247,11 @@ export class BlueGemGenerator {
 
       const imagePath = `./images/${imageName}`;
 
-      const result = await this.calculateBlueGemPercentagesForImage(imagePath, queueItem.finishKey);
+      const result = await BlueGemGenerator.calculateBlueGemPercentagesForImage(
+        imagePath,
+        queueItem.imageRegion,
+        queueItem.finishKey,
+      );
 
       this.results.push({
         ...queueItem,
@@ -225,18 +278,18 @@ export class BlueGemGenerator {
     const existingResult = JSON.parse((await readFile(jsonPath, 'utf-8')) || '{}') as ResultFormat;
 
     const grouped = this.results.reduce((acc, item) => {
-      const { itemKey, finishKey, imagePose, seed, result } = item;
+      const { itemKey, finishKey, seed, outputRegion, result } = item;
 
       if (!acc[itemKey]) acc[itemKey] = {};
       if (!acc[itemKey][finishKey]) acc[itemKey][finishKey] = {};
-      if (!acc[itemKey][finishKey][imagePose]) acc[itemKey][finishKey][imagePose] = [];
+      if (!acc[itemKey][finishKey][outputRegion]) acc[itemKey][finishKey][outputRegion] = [];
 
       const index = seed * 4;
 
-      acc[itemKey][finishKey][imagePose][index] = result.blue;
-      acc[itemKey][finishKey][imagePose][index + 1] = result.purple;
-      acc[itemKey][finishKey][imagePose][index + 2] = result.gold;
-      acc[itemKey][finishKey][imagePose][index + 3] = result.other;
+      acc[itemKey][finishKey][outputRegion][index] = result.blue;
+      acc[itemKey][finishKey][outputRegion][index + 1] = result.purple;
+      acc[itemKey][finishKey][outputRegion][index + 2] = result.gold;
+      acc[itemKey][finishKey][outputRegion][index + 3] = result.other;
 
       return acc;
     }, existingResult);
@@ -301,7 +354,6 @@ export class BlueGemGenerator {
 
 if (process.argv[2] === '--generate') {
   const generator = new BlueGemGenerator(process.argv[3] as ItemKey, process.argv[4] as string);
-
   await generator.download();
   await generator.run();
   await generator.storeResult();

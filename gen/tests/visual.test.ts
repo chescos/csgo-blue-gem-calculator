@@ -76,7 +76,7 @@ async function convertToMaskedImage(
     }
   }
 
-  outputPath ??= imagePath.replace('.png', '.masked.png');
+  outputPath ??= imagePath.replace('.', '.masked.');
 
   await sharp(Buffer.from(data), {
     raw: {
