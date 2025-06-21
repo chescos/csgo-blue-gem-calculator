@@ -33,8 +33,15 @@ export class BlueGemGenerator {
   queue: QueueItem[] = [];
   results: ResultItem[] = [];
 
-  constructor() {
+  itemFilter: ItemKey | undefined;
+  patternFilter: number | undefined;
+
+  constructor(itemFilter?: ItemKey, patternFilter?: string) {
     this.dirname = dirname(fileURLToPath(import.meta.url));
+    this.itemFilter = itemFilter;
+    if (patternFilter) {
+      this.patternFilter = parseInt(patternFilter, 10);
+    }
   }
 
   public static constructImageFileNameForTypeAndSeed(
@@ -142,9 +149,17 @@ export class BlueGemGenerator {
     for (const itemKey of Object.keys(items) as ItemKey[]) {
       const item = items[itemKey];
 
+      if (this.itemFilter && this.itemFilter !== itemKey) {
+        continue;
+      }
+
       item.types.forEach((finishKey): void => {
         item.images.forEach((imagePose): void => {
           for (let seed = 0; seed <= 1000; seed++) {
+            if (this.patternFilter && this.patternFilter !== seed) {
+              continue;
+            }
+
             this.queue.push({
               itemKey,
               finishKey,
@@ -207,7 +222,7 @@ export class BlueGemGenerator {
 
     const jsonPath = path.join(this.dirname, '/', 'result.json');
 
-    const existingResult = JSON.parse(await readFile(jsonPath, 'utf-8') || '{}') as ResultFormat;
+    const existingResult = JSON.parse((await readFile(jsonPath, 'utf-8')) || '{}') as ResultFormat;
 
     const grouped = this.results.reduce((acc, item) => {
       const { itemKey, finishKey, imagePose, seed, result } = item;
@@ -231,7 +246,7 @@ export class BlueGemGenerator {
 }
 
 if (process.argv[2] === '--generate') {
-  const generator = new BlueGemGenerator();
+  const generator = new BlueGemGenerator(process.argv[3] as ItemKey, process.argv[4] as string);
 
   await generator.download();
   await generator.run();
