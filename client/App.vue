@@ -1,6 +1,9 @@
 <script>
 import BlueGemCalculator from '../lib/main.js';
 
+import { CaseHardenedClassifier } from '../gen/algorithm/classifier-case-hardened.ts';
+import { HeatTreatedClassifier } from '../gen/algorithm/classifier-heat-treated.ts';
+
 const calculator = new BlueGemCalculator();
 
 const data = {};
@@ -51,6 +54,8 @@ export default {
       seedInput: null,
       imageCache: {},
       screenshotUrl: null,
+      displayedImage: null,
+      imageBlink: null,
     };
   },
 
@@ -59,6 +64,12 @@ export default {
     this.syncSortOrder();
     this.syncSeedInput();
     this.syncScreenshotUrl();
+
+    this.imageBlink = setInterval(this.blinkMaskedImage, 1000);
+  },
+
+  beforeDestroy() {
+    clearInterval(this.imageBlink);
   },
 
   watch: {
@@ -68,6 +79,7 @@ export default {
       if (!this.imageCache[newScreenshotUrl]) {
         const img = new Image();
         img.src = newScreenshotUrl;
+        img.crossOrigin = 'Anonymous';
         this.imageCache[newScreenshotUrl] = img;
       }
     },
@@ -132,6 +144,47 @@ export default {
       });
     },
 
+    blinkMaskedImage() {
+      if (!this.activeImages) {
+        this.displayedImage = this.screenshotUrl;
+        return;
+      }
+
+      if (!this.maskedImageUrl) {
+        const img = this.imageCache[this.screenshotUrl];
+        if (!img || img.complete === false) {
+          return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const classifier =
+          this.activeFinish === 'Heat Treated' ? new HeatTreatedClassifier() : new CaseHardenedClassifier();
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+          const a = data[i + 3];
+          if (a == 0) {
+            continue;
+          }
+
+          classifier.maskColorForDebugVisualization(data, i);
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+        this.maskedImageUrl = canvas.toDataURL('image/png');
+      }
+
+      this.displayedImage = this.displayedImage == this.screenshotUrl ? this.maskedImageUrl : this.screenshotUrl;
+    },
+
     syncSortOrder() {
       this.data[this.activeItem][this.activeFinish][this.activeRegion].sort((a, b) =>
         this.activeSort === 'asc'
@@ -161,6 +214,8 @@ export default {
       }
 
       this.screenshotUrl = `${baseUrl}${fileName}`;
+      this.displayedImage = this.screenshotUrl;
+      this.maskedImageUrl = undefined;
     },
 
     syncActiveFinish() {
@@ -417,7 +472,7 @@ export default {
       </svg>
     </button>
 
-    <img class="block w-auto mx-auto max-h-[50vh] my-20" :src="screenshotUrl" alt="Screenshot" />
+    <img class="block w-auto mx-auto max-h-[50vh] my-20" :src="displayedImage" alt="Screenshot" />
 
     <button
       aria-label="Next Seed"

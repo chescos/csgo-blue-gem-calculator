@@ -2,7 +2,6 @@ import { test } from 'vitest';
 import sharp from 'sharp';
 import { exec } from 'child_process';
 import { HeatTreatedClassifier } from '../algorithm/classifier-heat-treated';
-import { ColorType } from '../algorithm/color-type';
 import { CaseHardenedClassifier } from '../algorithm/classifier-case-hardened';
 import { BaseClassifier } from '../algorithm/classifier-base';
 
@@ -53,27 +52,7 @@ async function convertToMaskedImage(
       continue;
     }
 
-    const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
-
-    const colorType = classifier.getColorType(r, g, b);
-
-    if (colorType === ColorType.Blue) {
-      data[i] = 0;
-      data[i + 1] = 0;
-      data[i + 2] = 255;
-    } else if (colorType === ColorType.Purple) {
-      data[i] = 255;
-      data[i + 1] = 0;
-      data[i + 2] = 255;
-    } else if (colorType === ColorType.Gold) {
-      data[i] = 255;
-      data[i + 1] = 215;
-      data[i + 2] = 0;
-    } else if (colorType === ColorType.GrayOrUndetermined) {
-      data[i] = 0;
-      data[i + 1] = 0;
-      data[i + 2] = 0;
-    }
+    classifier.maskColorForDebugVisualization(data, i);
   }
 
   outputPath ??= imagePath.replace('.', '.masked.');
