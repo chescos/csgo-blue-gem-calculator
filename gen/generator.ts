@@ -237,7 +237,7 @@ export class BlueGemGenerator {
 
     await Promise.all(promises);
 
-    const duration = (Date.now() - start) / 1000;
+    const duration = Math.round((Date.now() - start) / 1000);
 
     console.log(`\nAll images calculated in ${duration} seconds`);
   }

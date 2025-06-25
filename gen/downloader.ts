@@ -39,7 +39,7 @@ class Downloader {
       exit(1);
     }
 
-    const duration = (Date.now() - start) / 1000;
+    const duration = Math.round((Date.now() - start) / 1000);
 
     console.log(`\nAll missing images downloaded in ${duration} seconds`);
   }
