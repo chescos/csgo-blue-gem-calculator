@@ -27,6 +27,30 @@ export abstract class BaseClassifier {
     return this.getColorTypeFromHsv(h, s, v);
   }
 
+  public maskColorForDebugVisualization(data: Buffer, i: number): void {
+    const [r, g, b] = [data[i]!, data[i + 1]!, data[i + 2]!];
+
+    const colorType = this.getColorType(r, g, b);
+
+    if (colorType === ColorType.Blue) {
+      data[i] = 0;
+      data[i + 1] = 0;
+      data[i + 2] = 255;
+    } else if (colorType === ColorType.Purple) {
+      data[i] = 255;
+      data[i + 1] = 0;
+      data[i + 2] = 255;
+    } else if (colorType === ColorType.Gold) {
+      data[i] = 255;
+      data[i + 1] = 215;
+      data[i + 2] = 0;
+    } else if (colorType === ColorType.GrayOrUndetermined) {
+      data[i] = 0;
+      data[i + 1] = 0;
+      data[i + 2] = 0;
+    }
+  }
+
   static rgb2hsv(r: number, g: number, b: number): [number, number, number] {
     const v = Math.max(r, g, b),
       c = v - Math.min(r, g, b);
