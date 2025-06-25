@@ -18,6 +18,8 @@ class Downloader {
   async start(): Promise<void> {
     console.log('Downloading missing images...');
 
+    const start = Date.now();
+
     const promises: Promise<void>[] = [];
 
     for (let i: number = 0; i < this.concurrency; i++) {
@@ -37,7 +39,9 @@ class Downloader {
       exit(1);
     }
 
-    console.log('\nAll missing images downloaded');
+    const duration = (Date.now() - start) / 1000;
+
+    console.log(`\nAll missing images downloaded in ${duration} seconds`);
   }
 
   async spawnWorker(): Promise<void> {

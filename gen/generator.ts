@@ -170,6 +170,8 @@ export class BlueGemGenerator {
   async run(): Promise<void> {
     console.log('Calculating images...');
 
+    const start = Date.now();
+
     for (const itemKey of Object.keys(items) as ItemKey[]) {
       const item = items[itemKey];
 
@@ -235,7 +237,9 @@ export class BlueGemGenerator {
 
     await Promise.all(promises);
 
-    console.log('\nAll images calculated');
+    const duration = (Date.now() - start) / 1000;
+
+    console.log(`\nAll images calculated in ${duration} seconds`);
   }
 
   async spawnWorker(): Promise<void> {
