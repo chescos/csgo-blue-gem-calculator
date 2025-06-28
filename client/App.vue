@@ -43,16 +43,14 @@ const data = {};
 
 export default {
   data() {
-    const searchItem = searchParams.get('item') || 'AK-47 | Case Hardened';
+    const itemName = searchParams.get('item') || 'AK-47';
+    const finishName = searchParams.get('finish') || 'Case Hardened';
 
-    const splitted = searchItem.split('|');
-    const itemName = splitted[0].trim();
-    const finishName = splitted[1].trim();
     const activeRegion = Object.keys(data[itemName][finishName])[0];
 
     return {
       data,
-      activeItem: itemName || 'AK-47',
+      activeItem: itemName,
       activeFinish: finishName,
       activeRegion: activeRegion,
       activeIndex: 0,
@@ -155,12 +153,13 @@ export default {
     },
 
     storeSearchQuery() {
-      const param = 'item';
-      const value = `${this.activeItem} | ${this.activeFinish}`;
-
       const url = new URL(window.location);
-      url.searchParams.set(param, value);
+
+      url.searchParams.set('item', this.activeItem);
+      url.searchParams.set('finish', this.activeFinish);
+
       window.history.pushState(null, '', url);
+      document.title = `CS2 Blue Gems - ${this.activeItem} | ${this.activeFinish}`;
     },
 
     blinkMaskedImage() {
