@@ -5,6 +5,7 @@ import { CaseHardenedClassifier } from '../gen/algorithm/classifier-case-hardene
 import { HeatTreatedClassifier } from '../gen/algorithm/classifier-heat-treated.ts';
 
 const calculator = new BlueGemCalculator();
+const searchParams = new URLSearchParams(document.location.search);
 
 const data = {};
 
@@ -42,11 +43,16 @@ const data = {};
 
 export default {
   data() {
+    const itemName = searchParams.get('item') || 'AK-47';
+    const finishName = searchParams.get('finish') || 'Case Hardened';
+
+    const activeRegion = Object.keys(data[itemName][finishName])[0];
+
     return {
       data,
-      activeItem: 'AK-47',
-      activeFinish: 'Case Hardened',
-      activeRegion: 'top',
+      activeItem: itemName,
+      activeFinish: finishName,
+      activeRegion: activeRegion,
       activeIndex: 0,
       activeOrder: 'blue',
       activeSort: 'desc',
@@ -85,6 +91,7 @@ export default {
     },
 
     activeItem() {
+      this.storeSearchQuery();
       this.syncActiveFinish();
       this.syncActiveRegion();
       this.syncActiveIndex();
@@ -94,6 +101,7 @@ export default {
     },
 
     activeFinish() {
+      this.storeSearchQuery();
       this.syncActiveRegion();
       this.syncActiveIndex();
       this.syncSortOrder();
@@ -142,6 +150,16 @@ export default {
           this.activeIndex++;
         }
       });
+    },
+
+    storeSearchQuery() {
+      const url = new URL(window.location);
+
+      url.searchParams.set('item', this.activeItem);
+      url.searchParams.set('finish', this.activeFinish);
+
+      window.history.pushState(null, '', url);
+      document.title = `CS2 Blue Gems - ${this.activeItem} | ${this.activeFinish}`;
     },
 
     blinkMaskedImage() {
